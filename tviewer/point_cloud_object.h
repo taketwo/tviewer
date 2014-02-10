@@ -134,9 +134,11 @@ namespace tviewer
       /// Data for visualization.
       PointCloudPtr data_;
 
+      /// Function which retrieves new data for visualization.
+      RetrieveFunction retrieve_;
+
     private:
 
-      RetrieveFunction retrieve_;
       int point_size_;
       float visibility_;
       Color color_;

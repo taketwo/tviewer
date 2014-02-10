@@ -50,8 +50,11 @@ tviewer::PointCloudWithColorShufflingObject::at_ (size_t index, boost::any& item
 void
 tviewer::PointCloudWithColorShufflingObject::updateData ()
 {
-  PointCloudObject<pcl::PointXYZRGBA>::updateData ();
-  generateColorMap ();
+  if (retrieve_)
+  {
+    data_ = retrieve_ ();
+    generateColorMap ();
+  }
 }
 
 void

@@ -61,7 +61,7 @@ namespace tviewer
                                           int point_size = 1.0,
                                           float visibility = 1.0,
                                           Color color = 0)
-      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, cloud, point_size, color)
+      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, cloud, point_size, visibility, color)
       {
         generateColorMap ();
       }
@@ -76,7 +76,7 @@ namespace tviewer
                                           int point_size = 1.0,
                                           float visibility = 1.0,
                                           Color color = 0)
-      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, retrieve, point_size, color)
+      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, retrieve, point_size, visibility, color)
       {
       }
 
@@ -92,6 +92,7 @@ namespace tviewer
       updateData () override;
 
       using PointCloudObject<pcl::PointXYZRGBA>::data_;
+      using PointCloudObject<pcl::PointXYZRGBA>::retrieve_;
 
     private:
 
