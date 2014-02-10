@@ -79,6 +79,7 @@ tviewer::TViewerImpl::remove (const std::string& object_name)
     {
       (*iter)->hide ();
       objects_.erase (iter);
+      break;
     }
 }
 
