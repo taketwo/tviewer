@@ -46,6 +46,9 @@ namespace tviewer
       /// Disabled assignment operator.
       TViewerDummy& operator= (const TViewerDummy&) = delete;
 
+      virtual ~TViewerDummy ()
+      { }
+
       virtual void
       run () override
       { }

@@ -47,6 +47,8 @@ namespace tviewer
       /// Disabled assignment operator.
       TViewerImpl& operator= (const TViewerImpl&) = delete;
 
+      virtual ~TViewerImpl ();
+
       virtual void
       run () override;
 

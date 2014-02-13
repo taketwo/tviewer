@@ -45,6 +45,11 @@ tviewer::TViewerImpl::TViewerImpl ()
   loadCameraParameters ("viewpoint.cam");
 }
 
+tviewer::TViewerImpl::~TViewerImpl ()
+{
+  hideAll ();
+}
+
 void
 tviewer::TViewerImpl::run ()
 {
