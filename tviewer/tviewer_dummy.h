@@ -90,6 +90,15 @@ namespace tviewer
       { }
 
       virtual void
+      addListener (const KeyboardListenerPtr& listener,
+                   std::initializer_list<std::string> dependent_objects = {})
+      { }
+
+      virtual void
+      removeListener (const std::string& listener_name) override
+      { }
+
+      virtual void
       saveCameraParameters (const std::string& filename) override
       { }
 

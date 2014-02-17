@@ -134,6 +134,28 @@ tviewer::TViewerImpl::updateAll ()
 }
 
 void
+tviewer::TViewerImpl::addListener (const KeyboardListener::Ptr& listener,
+                                   std::initializer_list<std::string> dependent_objects)
+{
+  for (const auto& lst : listeners_)
+    if (lst->getName () == listener->getName ())
+      assert (false); // TODO: throw exception
+  listeners_.push_back (listener);
+  listener_dependents_[listener->getName ()] = dependent_objects;
+}
+
+void
+tviewer::TViewerImpl::removeListener (const std::string& listener_name)
+{
+  for (auto iter = listeners_.begin (); iter != listeners_.end (); ++iter)
+    if ((*iter)->getName () == listener_name)
+    {
+      listeners_.erase (iter);
+      break;
+    }
+}
+
+void
 tviewer::TViewerImpl::saveCameraParameters (const std::string& filename)
 {
   std::vector<pcl::visualization::Camera> cameras;
@@ -484,6 +506,10 @@ tviewer::TViewerImpl::dispatch (const pcl::visualization::KeyboardEvent& key_eve
 {
   for (const auto& object : objects_)
     object->execute (key_event);
+  for (const auto& listener : listeners_)
+    if (listener->execute (key_event))
+      for (const auto& dependent : listener_dependents_[listener->getName ()])
+        update (dependent);
 }
 
 std::string
@@ -494,6 +520,14 @@ tviewer::TViewerImpl::getHelp () const
   if (objects_.size())
     for (size_t i = 0; i < objects_.size (); ++i)
       out += boost::str (fmt % (objects_[i]->visible_ ? "◉" : "○") % objects_[i]->key_ % objects_[i]->description_);
+  else
+    out += " <none>\n";
+  // Print the list of keyboard listeners
+  boost::format lfmt (" %s : %s [%s]\n");
+  out += "\nKeyboard listeners\n------------------\n";
+  if (listeners_.size())
+    for (size_t i = 0; i < listeners_.size (); ++i)
+      out += listeners_[i]->getDescription (lfmt);
   else
     out += " <none>\n";
   out += "\nPress Ctrl+<key> to shuffle colors";

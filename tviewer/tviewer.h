@@ -79,6 +79,9 @@ TViewer is released under a permissive MIT license.
 #include "normal_cloud_object.h"
 #include "point_cloud_with_color_shuffling_object.h"
 
+#include "keyboard_listeners/keyboard_listener.h"
+#include "keyboard_listeners/up_down_counter.h"
+
 #include "factory.h"
 
 #endif /* TVIEWER_TVIEWER_H */

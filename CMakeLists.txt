@@ -8,8 +8,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 option(TVIEWER_BUILD_DOC "Build tviewer documentation." OFF)
 
 # Compilation
-add_definitions(-Wall -pedantic)
 add_definitions(-std=c++11)
+add_definitions(-Wall -pedantic)
+# Boost Preprocessor library is very conservative in enabling variadics support.
+# In fact, if a compiler implements c++11, then we may be sure that variadicts
+# are supported as well. This define enables preprocessor macros that require
+# variadics support (needed by 'named_parameters_def.h').
+add_definitions(-DBOOST_PP_VARIADICS=1)
 
 # Dependencies
 find_package(Boost REQUIRED)
@@ -29,6 +34,7 @@ add_library(${LIB_NAME}
   tviewer/normal_cloud_object.cpp
   tviewer/visualization_object.cpp
   tviewer/point_cloud_with_color_shuffling_object.cpp
+  tviewer/keyboard_listeners/up_down_counter.cpp
 )
 
 add_subdirectory(examples)
@@ -36,7 +42,7 @@ add_subdirectory(examples)
 # Export variables
 set(TVIEWER_INCLUDE_DIRS ${libtviewer_SOURCE_DIR} CACHE STRING "TViewer include directories")
 set(TVIEWER_LIBRARIES ${LIB_NAME} CACHE STRING "TViewer libraries")
-set(TVIEWER_DEFINITIONS "-std=c++11" CACHE STRING "TViewer compiler definitions")
+set(TVIEWER_DEFINITIONS "-std=c++11 -DBOOST_PP_VARIADICS=1" CACHE STRING "TViewer compiler definitions")
 
 # Documentation
 if (TVIEWER_BUILD_DOC)

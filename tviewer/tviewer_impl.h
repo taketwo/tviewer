@@ -80,6 +80,13 @@ namespace tviewer
       updateAll () override;
 
       virtual void
+      addListener (const KeyboardListenerPtr& listener,
+                   std::initializer_list<std::string> dependent_objects = {}) override;
+
+      virtual void
+      removeListener (const std::string& listener_name) override;
+
+      virtual void
       saveCameraParameters (const std::string& filename) override;
 
       virtual void
@@ -140,6 +147,9 @@ namespace tviewer
       OptionalPointPickingEvent last_point_picking_event_;
 
       std::vector<VisualizationObjectPtr> objects_;
+      std::vector<KeyboardListenerPtr> listeners_;
+
+      std::map<std::string, std::set<std::string>> listener_dependents_;
 
       bool mode_waiting_user_input_;
 

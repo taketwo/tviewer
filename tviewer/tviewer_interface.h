@@ -101,6 +101,15 @@ namespace tviewer
       virtual void
       updateAll () = 0;
 
+      /** Register a new keyboard listener. */
+      virtual void
+      addListener (const KeyboardListenerPtr& listener,
+                   std::initializer_list<std::string> dependent_objects = {}) = 0;
+
+      /** Unregister a keyboard listener. */
+      virtual void
+      removeListener (const std::string& listener_name) = 0;
+
       /** Save the current camera parameters (viewpoint) to a given file. */
       virtual void
       saveCameraParameters (const std::string& filename) = 0;

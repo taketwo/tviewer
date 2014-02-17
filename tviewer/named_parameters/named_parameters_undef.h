@@ -20,36 +20,13 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_TVIEWER_FWD_H
-#define TVIEWER_TVIEWER_FWD_H
-
-/** \file tviewer_fwd.h
-  * Forward declarations and typedefs */
-
-#include <memory>
-
-namespace tviewer
-{
-
-  class TViewerImpl;
-  class TViewerDummy;
-  class TViewerInterface;
-  class VisualizationObject;
-  class KeyboardListener;
-
-  /// Shared pointer to an object that implements TViewer interface.
-  typedef std::shared_ptr<TViewerInterface> TViewerPtr;
-
-  /// Shared pointer to a visualization object.
-  typedef std::shared_ptr<VisualizationObject> VisualizationObjectPtr;
-
-  /// Shared pointer to a keyboard listener.
-  typedef std::shared_ptr<KeyboardListener> KeyboardListenerPtr;
-
-  /// RGBA color.
-  typedef uint32_t Color;
-
-}
-
-#endif /* TVIEWER_TVIEWER_FWD_H */
+#undef __FIELD
+#undef __SETTER_2
+#undef __SETTER_3
+#undef __SETTER
+#undef __NAMED_PARAMETER_4
+#undef __NAMED_PARAMETER_3
+#undef __NAMED_PARAMETER_2
+#undef NAMED_PARAMETER
+#undef OWNER_TYPE
 
