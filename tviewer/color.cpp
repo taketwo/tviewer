@@ -22,14 +22,16 @@
 
 #include <cmath>
 
-#include <boost/algorithm/clamp.hpp>
-
 #include "color.h"
 
 namespace tviewer
 {
 
-  using boost::algorithm::clamp;
+  template <typename T> const T&
+  clamp (const T& value, const T& low, const T& high)
+  {
+    return (value < low ? low : (value > high ? high : value));
+  }
 
   Color
   getColorFromRGB (uint8_t r, uint8_t g, uint8_t b)
