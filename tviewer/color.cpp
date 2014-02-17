@@ -21,6 +21,8 @@
  ******************************************************************************/
 
 #include <cmath>
+#include <random>
+#include <algorithm>
 
 #include "color.h"
 
@@ -77,9 +79,12 @@ namespace tviewer
   Color
   generateRandomColor ()
   {
-    uint8_t r = static_cast<uint8_t> ((rand () % 256));
-    uint8_t g = static_cast<uint8_t> ((rand () % 256));
-    uint8_t b = static_cast<uint8_t> ((rand () % 256));
+    static std::random_device rnd;
+    static std::mt19937 gen (rnd ());
+    static std::uniform_int_distribution<> dist(0, 255);
+    uint8_t r = static_cast<uint8_t> ((dist (gen) % 256));
+    uint8_t g = static_cast<uint8_t> ((dist (gen) % 256));
+    uint8_t b = static_cast<uint8_t> ((dist (gen) % 256));
     return getColorFromRGB (r, g, b);
   }
 
