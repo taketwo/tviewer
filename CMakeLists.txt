@@ -5,9 +5,7 @@ project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
-# Documentation
-set(DOXYFILE_LATEX false)
-include(UseDoxygen)
+option(TVIEWER_BUILD_DOC "Build tviewer documentation." OFF)
 
 # Compilation
 add_definitions(-Wall -pedantic)
@@ -39,3 +37,10 @@ add_subdirectory(examples)
 set(TVIEWER_INCLUDE_DIRS ${libtviewer_SOURCE_DIR} CACHE STRING "TViewer include directories")
 set(TVIEWER_LIBRARIES ${LIB_NAME} CACHE STRING "TViewer libraries")
 set(TVIEWER_DEFINITIONS "-std=c++11" CACHE STRING "TViewer compiler definitions")
+
+# Documentation
+if (TVIEWER_BUILD_DOC)
+  set(DOXYFILE_LATEX false)
+  include(UseDoxygen)
+endif()
+
