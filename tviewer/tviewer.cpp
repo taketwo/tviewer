@@ -47,7 +47,7 @@ tviewer::TViewerImpl::TViewerImpl ()
 
 tviewer::TViewerImpl::~TViewerImpl ()
 {
-  hideAll ();
+  hide ();
 }
 
 void
@@ -97,7 +97,7 @@ tviewer::TViewerImpl::show (const std::string& object_name)
 }
 
 void
-tviewer::TViewerImpl::showAll ()
+tviewer::TViewerImpl::show ()
 {
   for (const auto& object : objects_)
     object->show ();
@@ -112,7 +112,7 @@ tviewer::TViewerImpl::hide (const std::string& object_name)
 }
 
 void
-tviewer::TViewerImpl::hideAll ()
+tviewer::TViewerImpl::hide ()
 {
   for (const auto& object : objects_)
     object->hide ();
@@ -127,7 +127,7 @@ tviewer::TViewerImpl::update (const std::string& object_name)
 }
 
 void
-tviewer::TViewerImpl::updateAll ()
+tviewer::TViewerImpl::update ()
 {
   for (const auto& object : objects_)
     object->update ();

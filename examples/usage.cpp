@@ -80,13 +80,13 @@ int main (int argc, char** argv)
     0.05
   );
 
-  viewer->updateAll ();
-  viewer->showAll ();
+  viewer->update ();
+  viewer->show ();
 
   while (viewer->waitKeyPressed ({"i"}))
   {
     generateRandomPlanarCloud (*cloud);
-    viewer->updateAll ();
+    viewer->update ();
   }
 
   return 0;

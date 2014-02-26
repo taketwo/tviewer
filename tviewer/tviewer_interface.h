@@ -83,7 +83,7 @@ namespace tviewer
 
       /** Show all registered visualization objects. */
       virtual void
-      showAll () = 0;
+      show () = 0;
 
       /** Hide a given visualization object. */
       virtual void
@@ -91,7 +91,7 @@ namespace tviewer
 
       /** Hide all registered visualization objects. */
       virtual void
-      hideAll () = 0;
+      hide () = 0;
 
       /** Update a given visualization object. */
       virtual void
@@ -99,7 +99,7 @@ namespace tviewer
 
       /** Update all registered visualization objects. */
       virtual void
-      updateAll () = 0;
+      update () = 0;
 
       /** Register a new keyboard listener. */
       virtual void

@@ -75,15 +75,15 @@ int main (int argc, char** argv)
   UpDownCounter<int>::Ptr foobar = CreateUpDownCounter<int> ("foobar", "f").printOnChange ();
   viewer->addListener (foobar);
 
-  viewer->updateAll ();
-  viewer->showAll ();
+  viewer->update ();
+  viewer->show ();
 
   while (viewer->waitKeyPressed ({"i"}))
   {
     int k = *foobar;
     std::cout << "Foobar = " << k << std::endl;
     generateRandomPlanarCloud (*cloud);
-    viewer->updateAll ();
+    viewer->update ();
   }
 
   return 0;

@@ -65,19 +65,19 @@ namespace tviewer
       show (const std::string& object_name) override;
 
       virtual void
-      showAll () override;
+      show () override;
 
       virtual void
       hide (const std::string& object_name) override;
 
       virtual void
-      hideAll () override;
+      hide () override;
 
       virtual void
       update (const std::string& object_name) override;
 
       virtual void
-      updateAll () override;
+      update () override;
 
       virtual void
       addListener (const KeyboardListenerPtr& listener,

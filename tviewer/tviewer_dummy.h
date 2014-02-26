@@ -70,7 +70,7 @@ namespace tviewer
       { }
 
       virtual void
-      showAll () override
+      show () override
       { }
 
       virtual void
@@ -78,7 +78,7 @@ namespace tviewer
       { }
 
       virtual void
-      hideAll () override
+      hide () override
       { }
 
       virtual void
@@ -86,7 +86,7 @@ namespace tviewer
       { }
 
       virtual void
-      updateAll () override
+      update () override
       { }
 
       virtual void
