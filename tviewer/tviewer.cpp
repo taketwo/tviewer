@@ -388,15 +388,16 @@ tviewer::TViewerImpl::waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud
 
   // Set up point cloud display
   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr all_points (new pcl::PointCloud<pcl::PointXYZRGBA>);
-  const std::string id = "point-picker";
-  TViewerInterface::add<PointCloudObject<pcl::PointXYZRGBA>> (
-    id,
-    "user selected points",
-    "u",
-    all_points,
-    8,
-    0.9
+  const std::string id = "picked points";
+
+  add
+  ( CreatePointCloudObject<pcl::PointXYZRGBA> (id, "u")
+  . description                               ("User selected points")
+  . data                                      (all_points)
+  . pointSize                                 (8)
+  . visibility                                (0.9)
   );
+
   show (id);
 
   pcl::console::print_info ("Please select points:\n");

@@ -51,18 +51,17 @@ int main (int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
   generateRandomPlanarCloud (*cloud);
 
-  viewer->add<PointCloudObject<pcl::PointXYZ>> (
-    "cloud",
-    "random point cloud",
-    "c",
-    [&] { generateRandomPlanarCloud (*cloud); return cloud; },
-    4,
-    1.0,
-    generateRandomColor ()
+  viewer->add
+  ( CreatePointCloudObject<pcl::PointXYZ> ("cloud", "c")
+  . description                           ("Random point cloud")
+  . onUpdate                              ([&]{ generateRandomPlanarCloud (*cloud); return cloud; })
+  . pointSize                             (4)
+  . visibility                            (0.9)
+  . color                                 (generateRandomColor ())
   );
 
-  viewer->addListener (
-    CreateUpDownCounter<float> ("smoothing sigma", "s")
+  viewer->addListener
+  ( CreateUpDownCounter<float> ("smoothing sigma", "s")
   . description                ("Smoothing sigma for mesh bilateral filter")
   . min                        (0)
   . max                        (2)
@@ -82,7 +81,6 @@ int main (int argc, char** argv)
   {
     int k = *foobar;
     std::cout << "Foobar = " << k << std::endl;
-    generateRandomPlanarCloud (*cloud);
     viewer->update ();
   }
 

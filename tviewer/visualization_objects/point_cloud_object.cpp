@@ -39,7 +39,7 @@ tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLV
   v.addPointCloud (data_, name_);
   v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
   v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, visibility_, name_);
-  if (color_ != 0)
+  if (use_fixed_color_ != 0)
   {
     float r, g, b;
     std::tie (r, g, b) = getRGBFromColor (color_);
@@ -62,12 +62,36 @@ tviewer::PointCloudObject<PointT>::refreshDataInVisualizer (pcl::visualization::
 template <typename PointT> void
 tviewer::PointCloudObject<PointT>::updateData ()
 {
-  if (retrieve_)
-    data_ = retrieve_ ();
+  data_ = retrieve_ ();
+}
+
+template <typename T>
+tviewer::CreatePointCloudObject<T>::operator std::shared_ptr<PointCloudObject<T>> ()
+{
+  // Need to turn data_ into a local variable, otherwise the lambda does not
+  // seem to capture it by value properly.
+  auto d = *data_;
+  auto l = [=] { return d; };
+
+  return std::make_shared<PointCloudObject<T>> (name_,
+                                                description_ ? *description_ : name_,
+                                                key_,
+                                                *data_,
+                                                onUpdate_ ? *onUpdate_ : l,
+                                                *pointSize_,
+                                                *visibility_,
+                                                color_ ? true : false,
+                                                color_ ? *color_ : 0
+                                                );
 }
 
 template class tviewer::PointCloudObject<pcl::PointXYZ>;
 //template class tviewer::PointCloudObject<pcl::PointXYZL>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGB>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGBA>;
+
+template class tviewer::CreatePointCloudObject<pcl::PointXYZ>;
+//template class tviewer::CreatePointCloudObject<pcl::PointXYZL>;
+template class tviewer::CreatePointCloudObject<pcl::PointXYZRGB>;
+template class tviewer::CreatePointCloudObject<pcl::PointXYZRGBA>;
 

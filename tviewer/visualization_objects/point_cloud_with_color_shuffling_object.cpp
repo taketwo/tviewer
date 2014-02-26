@@ -50,11 +50,8 @@ tviewer::PointCloudWithColorShufflingObject::at_ (size_t index, boost::any& item
 void
 tviewer::PointCloudWithColorShufflingObject::updateData ()
 {
-  if (retrieve_)
-  {
-    data_ = retrieve_ ();
-    generateColorMap ();
-  }
+  data_ = retrieve_ ();
+  generateColorMap ();
 }
 
 void
@@ -94,5 +91,21 @@ tviewer::PointCloudWithColorShufflingObject::shuffleColors ()
   color_map_.swap (new_color_map);
 
   refresh ();
+}
+
+tviewer::CreatePointCloudWithColorShufflingObject::operator std::shared_ptr<PointCloudWithColorShufflingObject> ()
+{
+  // Need to turn data_ into a local variable, otherwise the lambda does not
+  // seem to capture it by value properly.
+  auto d = *data_;
+  auto l = [=] { return d; };
+
+  return std::make_shared<PointCloudWithColorShufflingObject> (name_,
+                                                               description_ ? *description_ : name_,
+                                                               key_,
+                                                               *data_,
+                                                               onUpdate_ ? *onUpdate_ : l,
+                                                               *pointSize_,
+                                                               *visibility_);
 }
 

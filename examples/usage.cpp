@@ -51,21 +51,21 @@ int main (int argc, char** argv)
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
   generateRandomPlanarCloud (*cloud);
 
-  viewer->add<PointCloudObject<pcl::PointXYZ>> (
-    "cloud",
-    "random point cloud",
-    "c",
-    cloud,
-    4,
-    1.0,
-    generateRandomColor ()
+  viewer->add
+  ( CreatePointCloudObject<pcl::PointXYZ> ("cloud", "c")
+  . description                           ("Random point cloud")
+  . data                                  (cloud)
+  . pointSize                             (4)
+  . visibility                            (0.9)
+  . color                                 (generateRandomColor ())
   );
 
-  viewer->add<NormalCloudObject>(
-    "normals",
-    "normals cloud",
-    "n",
-    [&]()
+  viewer->add
+  ( CreateNormalCloudObject ("normals", "n")
+  . description             ("Normals cloud")
+  . level                   (1)
+  . scale                   (0.05)
+  . onUpdate                ([&]
     {
       pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
       pcl::PointCloud<pcl::PointNormal>::Ptr point_normals (new pcl::PointCloud<pcl::PointNormal>);
@@ -75,9 +75,7 @@ int main (int argc, char** argv)
       ne.compute (*normals);
       pcl::concatenateFields (*cloud, *normals, *point_normals);
       return point_normals;
-    },
-    1,
-    0.05
+    })
   );
 
   viewer->update ();

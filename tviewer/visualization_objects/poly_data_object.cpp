@@ -22,3 +22,17 @@
 
 #include "poly_data_object.h"
 
+tviewer::CreatePolyDataObject::operator std::shared_ptr<PolyDataObject> ()
+{
+  // Need to turn data_ into a local variable, otherwise the lambda does not
+  // seem to capture it by value properly.
+  auto d = *data_;
+  auto l = [=] { return d; };
+
+  return std::make_shared<PolyDataObject> (name_,
+                                           description_ ? *description_ : name_,
+                                           key_,
+                                           *data_,
+                                           onUpdate_ ? *onUpdate_ : l);
+}
+

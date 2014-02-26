@@ -50,7 +50,7 @@ namespace tviewer
       /// Function that retrieves data for visualization.
       typedef std::function<PointCloudPtr ()> RetrieveFunction;
 
-      /** Construct a visualization object using a pointer to data.
+      /** Construct point cloud visualization object.
         *
         * The last parameter controls the color used to display the points.
         * When set to non-zero, the points are displayed using the RGBA color
@@ -60,56 +60,30 @@ namespace tviewer
         *
         * \param[in] name unique name (identifier) for the object
         * \param[in] description short description of the object that will be
-        * displayed in help
+        *            displayed in help
         * \param[in] key key used to show/hide the object
         * \param[in] cloud cloud of points to display
-        * \param[in] point_size size of points (default: 1.0)
-        * \param[in] visibility opacity of points (default: 1.0, opaque)
-        * \param[in] color color of points (default: 0) */
+        * \param[in] retrieve function that returns a point cloud that is to be
+        *            displayed
+        * \param[in] point_size size of points
+        * \param[in] visibility opacity of points (0.0 is transparent, 1.0 is
+        *            opaque)
+        * \param[in] color color of points */
       PointCloudObject (const std::string& name,
                         const std::string& description,
                         const std::string& key,
                         const PointCloudPtr& cloud,
-                        int point_size = 1.0,
-                        float visibility = 1.0,
-                        Color color = 0)
+                        const RetrieveFunction& retrieve,
+                        int point_size,
+                        float visibility,
+                        bool use_fixed_color,
+                        Color color)
       : VisualizationObject (name, description, key)
       , data_ (cloud)
-      , point_size_ (point_size)
-      , visibility_ (visibility)
-      , color_ (color)
-      {
-      }
-
-      /** Construct a visualization object using a function that retrieves data.
-        *
-        * The last parameter controls the color used to display the points.
-        * When set to non-zero, the points are displayed using the RGBA color
-        * determined by that number. When set to zero, the color stored inside
-        * the points is used, or white if the point type does not have color
-        * information.
-        *
-        * \param[in] name unique name (identifier) for the object
-        * \param[in] description short description of the object that will be
-        * displayed in help
-        * \param[in] key key used to show/hide the object
-        * \param[in] retrieve function that returns point cloud data that is to
-        * be displayed
-        * \param[in] point_size size of points (default: 1.0)
-        * \param[in] visibility opacity of points (default: 1.0, opaque)
-        * \param[in] color color of points (default: 0) */
-      PointCloudObject (const std::string& name,
-                        const std::string& description,
-                        const std::string& key,
-                        const RetrieveFunction& retrieve,
-                        int point_size = 1.0,
-                        float visibility = 1.0,
-                        Color color = 0)
-      : VisualizationObject (name, description, key)
-      , data_ (new PointCloud)
       , retrieve_ (retrieve)
       , point_size_ (point_size)
       , visibility_ (visibility)
+      , use_fixed_color_ (use_fixed_color)
       , color_ (color)
       {
       }
@@ -141,7 +115,49 @@ namespace tviewer
 
       int point_size_;
       float visibility_;
+      bool use_fixed_color_;
       Color color_;
+
+  };
+
+  template <typename T>
+  class CreatePointCloudObject
+  {
+
+    private:
+
+      std::string name_;
+      std::string key_;
+
+      typedef typename PointCloudObject<T>::PointCloud Data;
+      typedef typename PointCloudObject<T>::PointCloudPtr DataPtr;
+
+#include "../named_parameters/named_parameters_def.h"
+#define OWNER_TYPE CreatePointCloudObject<T>
+
+      NAMED_PARAMETER (std::string, description);
+      NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
+      NAMED_PARAMETER (typename PointCloudObject<T>::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (int, pointSize, 1);
+      NAMED_PARAMETER (float, visibility, 1.0);
+      NAMED_PARAMETER (Color, color);
+
+#include "../named_parameters/named_parameters_undef.h"
+
+    public:
+
+      CreatePointCloudObject (const std::string& name, const std::string& key)
+      : name_ (name)
+      , key_ (key)
+      {
+      }
+
+      operator std::shared_ptr<PointCloudObject<T>> ();
+
+      inline operator std::shared_ptr<VisualizationObject> ()
+      {
+        return this->operator std::shared_ptr<PointCloudObject<T>> ();
+      }
 
   };
 

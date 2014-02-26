@@ -54,30 +54,16 @@ namespace tviewer
         * \param[in] description short description of the object that will be
         * displayed in help
         * \param[in] key key used to show/hide the object
-        * \param[in] data poly data to display */
-      PolyDataObject (const std::string& name,
-                      const std::string& description,
-                      const std::string& key,
-                      const PolyDataPtr& data)
-      : VisualizationObject (name, description, key)
-      , data_ (data)
-      {
-      }
-
-      /** Construct a visualization object using a function that retrieves data.
-        *
-        * \param[in] name unique name (identifier) for the object
-        * \param[in] description short description of the object that will be
-        * displayed in help
-        * \param[in] key key used to show/hide the object
+        * \param[in] data poly data to display
         * \param[in] retrieve function that returns poly data that is to be
         * displayed */
       PolyDataObject (const std::string& name,
                       const std::string& description,
                       const std::string& key,
+                      const PolyDataPtr& data,
                       const RetrieveFunction& retrieve)
       : VisualizationObject (name, description, key)
-      , data_ (PolyDataPtr::New ())
+      , data_ (data)
       , retrieve_ (retrieve)
       {
       }
@@ -99,14 +85,50 @@ namespace tviewer
       virtual void
       updateData () override
       {
-        if (retrieve_)
-          data_ = retrieve_ ();
+        data_ = retrieve_ ();
       }
 
     private:
 
+      /// Data for visualization.
       PolyDataPtr data_;
+
+      /// Function which retrieves new data for visualization.
       RetrieveFunction retrieve_;
+
+  };
+
+  class CreatePolyDataObject
+  {
+
+    private:
+
+      std::string name_;
+      std::string key_;
+
+#include "../named_parameters/named_parameters_def.h"
+#define OWNER_TYPE CreatePolyDataObject
+
+      NAMED_PARAMETER (std::string, description);
+      NAMED_PARAMETER (PolyDataObject::PolyDataPtr, data, PolyDataObject::PolyDataPtr::New ());
+      NAMED_PARAMETER (PolyDataObject::RetrieveFunction, onUpdate);
+
+#include "../named_parameters/named_parameters_undef.h"
+
+    public:
+
+      CreatePolyDataObject (const std::string& name, const std::string& key)
+      : name_ (name)
+      , key_ (key)
+      {
+      }
+
+      operator std::shared_ptr<PolyDataObject> ();
+
+      inline operator std::shared_ptr<VisualizationObject> ()
+      {
+        return this->operator std::shared_ptr<PolyDataObject> ();
+      }
 
   };
 

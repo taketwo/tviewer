@@ -48,46 +48,26 @@ namespace tviewer
       /// Function that retrieves data for visualization.
       typedef std::function<NormalCloudConstPtr ()> RetrieveFunction;
 
-      /** Construct a visualization object using a pointer to data.
+      /** Construct normal cloud visualization object.
         *
         * \param[in] name unique name (identifier) for the object
         * \param[in] description short description of the object that will be
-        * displayed in help
+        *            displayed in help
         * \param[in] key key used to show/hide the object
         * \param[in] cloud cloud of points with normals to display
-        * \param[in] level display only every \p level th point (default: 100)
-        * \param[in] scale normal arrow scale (default: 0.02 m) */
+        * \param[in] retrieve function that returns a point cloud that is to be
+        *            displayed
+        * \param[in] level display only every \p level th point
+        * \param[in] scale normal arrow scale */
       NormalCloudObject (const std::string& name,
                          const std::string& description,
                          const std::string& key,
                          const NormalCloudConstPtr& cloud,
-                         int level = 100,
-                         float scale = 0.02)
-      : VisualizationObject (name, description, key)
-      , data_ (cloud)
-      , level_ (level)
-      , scale_ (scale)
-      {
-      }
-
-      /** Construct a visualization object using a function that retrieves data.
-        *
-        * \param[in] name unique name (identifier) for the object
-        * \param[in] description short description of the object that will be
-        * displayed in help
-        * \param[in] key key used to show/hide the object
-        * \param[in] retrieve function that returns point cloud data that is to
-        * be displayed
-        * \param[in] level display only every \p level th point (default: 100)
-        * \param[in] scale normal arrow scale (default: 0.02 m) */
-      NormalCloudObject (const std::string& name,
-                         const std::string& description,
-                         const std::string& key,
                          const RetrieveFunction& retrieve,
                          int level = 100,
                          float scale = 0.02)
       : VisualizationObject (name, description, key)
-      , data_ (new NormalCloud)
+      , data_ (cloud)
       , retrieve_ (retrieve)
       , level_ (level)
       , scale_ (scale)
@@ -111,8 +91,7 @@ namespace tviewer
       virtual void
       updateData () override
       {
-        if (retrieve_)
-          data_ = retrieve_ ();
+        data_ = retrieve_ ();
       }
 
     private:
@@ -121,6 +100,45 @@ namespace tviewer
       RetrieveFunction retrieve_;
       int level_;
       float scale_;
+
+  };
+
+  class CreateNormalCloudObject
+  {
+
+    private:
+
+      std::string name_;
+      std::string key_;
+
+      typedef NormalCloudObject::NormalCloud Data;
+      typedef NormalCloudObject::NormalCloudConstPtr DataPtr;
+
+#include "../named_parameters/named_parameters_def.h"
+#define OWNER_TYPE CreateNormalCloudObject
+
+      NAMED_PARAMETER (std::string, description);
+      NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
+      NAMED_PARAMETER (NormalCloudObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (int, level, 100);
+      NAMED_PARAMETER (float, scale, 0.02);
+
+#include "../named_parameters/named_parameters_undef.h"
+
+    public:
+
+      CreateNormalCloudObject (const std::string& name, const std::string& key)
+      : name_ (name)
+      , key_ (key)
+      {
+      }
+
+      operator std::shared_ptr<NormalCloudObject> ();
+
+      inline operator std::shared_ptr<VisualizationObject> ()
+      {
+        return this->operator std::shared_ptr<NormalCloudObject> ();
+      }
 
   };
 

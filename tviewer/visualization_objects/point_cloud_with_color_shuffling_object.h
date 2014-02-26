@@ -51,33 +51,27 @@ namespace tviewer
       /// Function that retrieves data for visualization.
       typedef std::function<PointCloudPtr ()> RetrieveFunction;
 
-      /** Construct a visualization object using a pointer to data.
+      /** Construct point cloud with shuffling visualization object.
         *
         * See the documentation for PointCloudObject(). */
       PointCloudWithColorShufflingObject (const std::string& name,
                                           const std::string& description,
                                           const std::string& key,
                                           const PointCloudPtr& cloud,
-                                          int point_size = 1.0,
-                                          float visibility = 1.0,
-                                          Color color = 0)
-      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, cloud, point_size, visibility, color)
+                                          const RetrieveFunction& retrieve,
+                                          int point_size,
+                                          float visibility)
+      : PointCloudObject<pcl::PointXYZRGBA> (name,
+                                             description,
+                                             key,
+                                             cloud,
+                                             retrieve,
+                                             point_size,
+                                             visibility,
+                                             false,
+                                             0)
       {
         generateColorMap ();
-      }
-
-      /** Construct a visualization object using a function that retrieves data.
-        *
-        * See the documentation for PointCloudObject(). */
-      PointCloudWithColorShufflingObject (const std::string& name,
-                                          const std::string& description,
-                                          const std::string& key,
-                                          const RetrieveFunction& retrieve,
-                                          int point_size = 1.0,
-                                          float visibility = 1.0,
-                                          Color color = 0)
-      : PointCloudObject<pcl::PointXYZRGBA> (name, description, key, retrieve, point_size, visibility, color)
-      {
       }
 
       virtual bool
@@ -104,6 +98,45 @@ namespace tviewer
 
       // Maps current color to the original color.
       std::map<Color, Color> color_map_;
+
+  };
+
+  class CreatePointCloudWithColorShufflingObject
+  {
+
+    private:
+
+      std::string name_;
+      std::string key_;
+
+      typedef PointCloudWithColorShufflingObject::PointCloud Data;
+      typedef PointCloudWithColorShufflingObject::PointCloudPtr DataPtr;
+
+#include "../named_parameters/named_parameters_def.h"
+#define OWNER_TYPE CreatePointCloudWithColorShufflingObject
+
+      NAMED_PARAMETER (std::string, description);
+      NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
+      NAMED_PARAMETER (PointCloudWithColorShufflingObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (int, pointSize, 1);
+      NAMED_PARAMETER (float, visibility, 1.0);
+
+#include "../named_parameters/named_parameters_undef.h"
+
+    public:
+
+      CreatePointCloudWithColorShufflingObject (const std::string& name, const std::string& key)
+      : name_ (name)
+      , key_ (key)
+      {
+      }
+
+      operator std::shared_ptr<PointCloudWithColorShufflingObject> ();
+
+      inline operator std::shared_ptr<VisualizationObject> ()
+      {
+        return this->operator std::shared_ptr<PointCloudWithColorShufflingObject> ();
+      }
 
   };
 
