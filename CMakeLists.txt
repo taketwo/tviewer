@@ -29,12 +29,12 @@ add_library(${LIB_NAME}
   tviewer/utils.cpp
   tviewer/tviewer.cpp
   tviewer/factory.cpp
-  tviewer/poly_data_object.cpp
-  tviewer/point_cloud_object.cpp
-  tviewer/normal_cloud_object.cpp
-  tviewer/visualization_object.cpp
-  tviewer/point_cloud_with_color_shuffling_object.cpp
   tviewer/keyboard_listeners/up_down_counter.cpp
+  tviewer/visualization_objects/poly_data_object.cpp
+  tviewer/visualization_objects/point_cloud_object.cpp
+  tviewer/visualization_objects/normal_cloud_object.cpp
+  tviewer/visualization_objects/visualization_object.cpp
+  tviewer/visualization_objects/point_cloud_with_color_shuffling_object.cpp
 )
 
 add_subdirectory(examples)

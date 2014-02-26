@@ -33,7 +33,7 @@
 
 #include <pcl/visualization/pcl_visualizer.h>
 
-#include "tviewer_fwd.h"
+#include "../tviewer_fwd.h"
 
 namespace tviewer
 {

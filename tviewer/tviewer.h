@@ -73,14 +73,14 @@ TViewer is released under a permissive MIT license.
 #include "tviewer_dummy.h"
 #include "tviewer_impl.h"
 
-#include "visualization_object.h"
-#include "poly_data_object.h"
-#include "point_cloud_object.h"
-#include "normal_cloud_object.h"
-#include "point_cloud_with_color_shuffling_object.h"
-
 #include "keyboard_listeners/keyboard_listener.h"
 #include "keyboard_listeners/up_down_counter.h"
+
+#include "visualization_objects/visualization_object.h"
+#include "visualization_objects/poly_data_object.h"
+#include "visualization_objects/point_cloud_object.h"
+#include "visualization_objects/normal_cloud_object.h"
+#include "visualization_objects/point_cloud_with_color_shuffling_object.h"
 
 #include "factory.h"
 

@@ -21,7 +21,7 @@
  ******************************************************************************/
 
 #include "visualization_object.h"
-#include "utils.h"
+#include "../utils.h"
 
 tviewer::VisualizationObject::VisualizationObject (const std::string& name,
                                                    const std::string& description,

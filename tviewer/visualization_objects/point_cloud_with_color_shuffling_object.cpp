@@ -20,7 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#include "utils.h"
+#include "../utils.h"
 #include "point_cloud_with_color_shuffling_object.h"
 
 bool

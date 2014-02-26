@@ -26,7 +26,7 @@
 /** \file point_cloud_object.h
   * Visualization object for points */
 
-#include "color.h"
+#include "../color.h"
 #include "visualization_object.h"
 
 namespace tviewer
