@@ -31,12 +31,12 @@ tviewer::UpDownCounter<T>::execute (const pcl::visualization::KeyboardEvent& key
 {
   if (matchKeys (key_event, key_))
   {
-    setCounter (counter_ + step_);
+    set (counter_ + step_);
     return true;
   }
   else if (matchKeys (key_event, boost::to_upper_copy (key_)))
   {
-    setCounter (counter_ - step_);
+    set (counter_ - step_);
     return true;
   }
   return false;
@@ -49,7 +49,7 @@ tviewer::UpDownCounter<T>::getDescription (boost::format& fmt)
 }
 
 template <typename T> void
-tviewer::UpDownCounter<T>::setCounter (T value)
+tviewer::UpDownCounter<T>::set (T value)
 {
   if (value > max_)
   {

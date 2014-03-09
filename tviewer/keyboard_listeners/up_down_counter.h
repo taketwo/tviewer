@@ -103,10 +103,19 @@ namespace tviewer
         return counter_;
       }
 
-    private:
-
+      /** Set new current value of the counter.
+        *
+        * If the new value is outside of the valid region (defined by \c min_
+        * and \c max_), then the counter will be set to the corresponding
+        * boundary or (if the wrap around option is enbled) to the opposite
+        * boundary.
+        *
+        * This function also triggers "onChange" callback and prints the new
+        * value (if enabled with \c print_on_change_). */
       void
-      setCounter (T value);
+      set (T value);
+
+    private:
 
       std::string key_;
       T counter_;
