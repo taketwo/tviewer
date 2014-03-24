@@ -68,10 +68,16 @@ tviewer::UpDownCounter<T>::execute (const pcl::visualization::KeyboardEvent& key
   return false;
 }
 
-template <typename T> std::string
-tviewer::UpDownCounter<T>::getDescription (boost::format& fmt)
+template <typename T> void
+tviewer::UpDownCounter<T>::getInfo (std::string& diagram,
+                                    std::string& description,
+                                    std::string& keys,
+                                    std::string& extra)
 {
-  return boost::str (fmt % "+/-" % description_ % key_);
+  diagram = "  ↑↓ ";
+  keys = key_up_ + "↑ " + key_down_ + "↓";
+  description = description_;
+  extra = "Current: " + boost::lexical_cast<std::string> (counter_);
 }
 
 template <typename T> void

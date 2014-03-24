@@ -68,8 +68,18 @@ namespace tviewer
         return name_;
       }
 
-      virtual std::string
-      getDescription (boost::format& fmt) = 0;
+      /** Get information about this listener that is to be displayed in help.
+        *
+        * \param[out] diagram 5-character wide string with a digram which
+        * reflects the state and/or the type of the listener
+        * \param[out] description short description of the listener
+        * \param[out] keys the keys on which this listener reacts
+        * \param[out] extra additional line of information (optional) */
+      virtual void
+      getInfo (std::string& diagram,
+               std::string& description,
+               std::string& keys,
+               std::string& extra) = 0;
 
     protected:
 

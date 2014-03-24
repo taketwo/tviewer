@@ -84,8 +84,11 @@ namespace tviewer
       virtual bool
       execute (const pcl::visualization::KeyboardEvent& key_event) override;
 
-      virtual std::string
-      getDescription (boost::format& fmt) override;
+      virtual void
+      getInfo (std::string& diagram,
+               std::string& description,
+               std::string& keys,
+               std::string& extra) override;
 
       /** Retrieve the current value of the counter. */
       inline operator T () const
