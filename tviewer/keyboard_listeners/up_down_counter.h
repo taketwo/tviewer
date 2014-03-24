@@ -24,14 +24,15 @@
 #define TVIEWER_UP_DOWN_COUNTER_H
 
 /** \file up_down_counter.h
-  * TODO */
+  * Up-down counting keyboard listener */
 
 #include "keyboard_listener.h"
 
 namespace tviewer
 {
 
-  /** TODO
+  /** A keyboard listener which maintains a counter that may be increased and
+    * decreased by a fixed step amount.
     *
     * \ingroup public */
   template <typename T>
@@ -40,8 +41,10 @@ namespace tviewer
 
     public:
 
+      /// Shared pointer to an up-down counter.
       typedef std::shared_ptr<UpDownCounter> Ptr;
 
+      /// Function to be called when counter value changes.
       typedef std::function<void (T)> OnChangeCallback;
 
       /** Construct an up-down counter.
@@ -124,6 +127,10 @@ namespace tviewer
 
   };
 
+  /** Helper class that provides a fluent interface to simplify instantiation of
+    * an up-down counter.
+    *
+    * \ingroup public */
   template <typename T>
   class CreateUpDownCounter
   {

@@ -24,7 +24,7 @@
 #define TVIEWER_KEYBOARD_LISTENER_H
 
 /** \file keyboard_listener.h
-  * TODO */
+  * Base class for keyboard listeners */
 
 #include <string>
 #include <memory>
@@ -36,7 +36,11 @@
 namespace tviewer
 {
 
-  /** Purely abstract base class TODO.
+  /** Purely abstract base class for keyboard listeners that may be registered
+    * with a TViewer to drive user interactions.
+    *
+    * TViewer maintains a collection of keyboard listeners. When a keyboard
+    * event occurs each of these listerens is given a chance to react to it.
     *
     * \ingroup private */
   class KeyboardListener
@@ -55,13 +59,15 @@ namespace tviewer
       {
       }
 
-      /** Execute the command associated with a given keyboard event.
+      /** Execute the command associated with this keyboard listener if a given
+        * keyboard event matches.
         *
         * \return \c false if no command is associated and/or no action was
         * taken, \c true otherwise */
       virtual bool
       execute (const pcl::visualization::KeyboardEvent& key_event) = 0;
 
+      /** Get the name (identifier) of this keyboard listener. */
       inline const std::string&
       getName ()
       {
