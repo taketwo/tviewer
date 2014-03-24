@@ -26,15 +26,41 @@
 #include "up_down_counter.h"
 #include "../utils.h"
 
+template <typename T>
+tviewer::UpDownCounter<T>::UpDownCounter (const std::string& name,
+                                          const std::string& description,
+                                          const std::string& key,
+                                          const OnChangeCallback on_change_callback,
+                                          bool print_on_change,
+                                          bool wrap_around,
+                                          T init,
+                                          T step,
+                                          T min,
+                                          T max)
+: KeyboardListener (name)
+, description_ (description)
+, key_up_ (key)
+, key_down_ (boost::to_upper_copy (key))
+, counter_ (init)
+, on_change_callback_ (on_change_callback)
+, print_on_change_ (print_on_change)
+, wrap_around_ (wrap_around)
+, init_ (init)
+, step_ (step)
+, min_ (min)
+, max_ (max)
+{
+}
+
 template <typename T> bool
 tviewer::UpDownCounter<T>::execute (const pcl::visualization::KeyboardEvent& key_event)
 {
-  if (matchKeys (key_event, key_))
+  if (matchKeys (key_event, key_up_))
   {
     set (counter_ + step_);
     return true;
   }
-  else if (matchKeys (key_event, boost::to_upper_copy (key_)))
+  else if (matchKeys (key_event, key_down_))
   {
     set (counter_ - step_);
     return true;

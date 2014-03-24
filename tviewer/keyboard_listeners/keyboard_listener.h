@@ -49,13 +49,9 @@ namespace tviewer
 
       /** Construct a keyboard listener.
         *
-        * \param[in] name unique name (identifier) for the object
-        * \param[in] description short description of the object that will be
-        * displayed in help */
-      KeyboardListener (const std::string& name,
-                        const std::string& description)
+        * \param[in] name unique name (identifier) for the object */
+      KeyboardListener (const std::string& name)
       : name_ (name)
-      , description_ (description)
       {
       }
 
@@ -79,9 +75,6 @@ namespace tviewer
 
       /// Listener identifier.
       std::string name_;
-
-      /// Short description for help.
-      std::string description_;
 
   };
 

@@ -47,9 +47,11 @@ namespace tviewer
       /** Construct an up-down counter.
         *
         * \param[in] name unique name (identifier) for the keyboard listener
-        * \param[in] description short description of the listener that will be
+        * \param[in] description short description of the counter that will be
         * displayed in help
-        * \param[in] key key used to trigger counter update
+        * \param[in] key alpha character used to trigger counter update (only
+        * the "up" direction, "down" will be automatically assigned to the
+        * upper version of this character)
         * \param[in] on_change_callback function to be executed when the value
         * of the counter changes. The function should accept a single
         * parameter -- the new value of the counter
@@ -63,27 +65,15 @@ namespace tviewer
         * \param[in] min minimum allowed value
         * \param[in] max maximum allowed value */
       UpDownCounter (const std::string& name,
-                      const std::string& description,
-                      const std::string& key,
-                      const OnChangeCallback on_change_callback,
-                      bool print_on_change,
-                      bool wrap_around,
-                      T init,
-                      T step,
-                      T min,
-                      T max)
-      : KeyboardListener (name, description)
-      , key_ (key)
-      , counter_ (init)
-      , on_change_callback_ (on_change_callback)
-      , print_on_change_ (print_on_change)
-      , wrap_around_ (wrap_around)
-      , init_ (init)
-      , step_ (step)
-      , min_ (min)
-      , max_ (max)
-      {
-      }
+                     const std::string& description,
+                     const std::string& key,
+                     const OnChangeCallback on_change_callback,
+                     bool print_on_change,
+                     bool wrap_around,
+                     T init,
+                     T step,
+                     T min,
+                     T max);
 
       /// Disabled copy constructor.
       UpDownCounter (const UpDownCounter<T>&) = delete;
@@ -117,7 +107,9 @@ namespace tviewer
 
     private:
 
-      std::string key_;
+      std::string description_;
+      std::string key_up_;
+      std::string key_down_;
       T counter_;
       OnChangeCallback on_change_callback_;
       bool print_on_change_;
