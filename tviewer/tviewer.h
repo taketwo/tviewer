@@ -75,6 +75,7 @@ TViewer is released under a permissive MIT license.
 
 #include "keyboard_listeners/keyboard_listener.h"
 #include "keyboard_listeners/up_down_counter.h"
+#include "keyboard_listeners/binary_state_switch.h"
 
 #include "visualization_objects/visualization_object.h"
 #include "visualization_objects/poly_data_object.h"
