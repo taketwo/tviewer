@@ -489,7 +489,7 @@ tviewer::TViewerImpl::keyboardEventCallback (const pcl::visualization::KeyboardE
       loadCameraParameters ("viewpoint.cam");
     // print (H)elp
     if (matchKeys (event, "h"))
-      pcl::console::print_info (getHelp ().c_str());
+      printHelp ();
     dispatch (event);
     if (matchKeys (event, "Escape"))
       mode_waiting_user_input_ = false;
@@ -513,26 +513,59 @@ tviewer::TViewerImpl::dispatch (const pcl::visualization::KeyboardEvent& key_eve
         update (dependent);
 }
 
-std::string
-tviewer::TViewerImpl::getHelp () const
+void
+tviewer::TViewerImpl::printHelp () const
 {
-  boost::format fmt (" %s  %s : %s\n");
-  std::string out  = "\nVisualization objects\n---------------------\n";
+  boost::format fmt_header ("\n%=60s"
+                            "\n─────┬╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┬──────\n");
+  boost::format fmt_footer ("─────┴╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┴──────\n");
+  boost::format fmt_info ("%s│ %-46s │ ");
+  boost::format fmt_extra ("     │ %-46s │\n");
+
+  // Print the list of visualization objects
   if (objects_.size())
+  {
+    std::cout << fmt_header % "Visualization objects";
     for (size_t i = 0; i < objects_.size (); ++i)
-      out += boost::str (fmt % (objects_[i]->visible_ ? "◉" : "○") % objects_[i]->key_ % objects_[i]->description_);
-  else
-    out += " <none>\n";
+    {
+      std::cout << fmt_info % (objects_[i]->visible_ ? "  ☒  " : "  ☐  ") % objects_[i]->description_;
+      printWithHighlight (objects_[i]->key_, isalpha);
+      std::cout << std::endl;
+    }
+    std::cout << fmt_footer;
+  }
+
   // Print the list of keyboard listeners
-  boost::format lfmt (" %s : %s [%s]\n");
-  out += "\nKeyboard listeners\n------------------\n";
   if (listeners_.size())
+  {
+    std::cout << fmt_header % "Keyboard listeners";
     for (size_t i = 0; i < listeners_.size (); ++i)
-      out += listeners_[i]->getDescription (lfmt);
-  else
-    out += " <none>\n";
-  out += "\nPress Ctrl+<key> to shuffle colors";
-  out += "\nPress z/Z to save/load camera viewpoint\n";
-  return out;
+    {
+      std::string diagram, description, keys, extra;
+      listeners_[i]->getInfo (diagram, description, keys, extra);
+      std::cout << fmt_info % diagram % description;
+      printWithHighlight (keys, isalpha);
+      std::cout << std::endl;
+      if (!extra.empty ())
+        std::cout << fmt_extra % extra;
+    }
+    std::cout << fmt_footer;
+  }
+  //boost::format lfmt2 ("   ⦿      │ %s\n");
+  //out += "\nPress Ctrl+<key> to shuffle colors";
+  //out += "\nPress z/Z to save/load camera viewpoint\n";
+}
+
+void
+tviewer::TViewerImpl::printWithHighlight (const std::string& str, std::function<bool (char)> highlight)
+{
+  for (size_t i = 0; i < str.size (); ++i)
+  {
+    if (highlight (str[i]))
+      pcl::console::change_text_color (stdout, pcl::console::TT_RESET, pcl::console::TT_MAGENTA);
+    std::cout << str[i];
+    if (highlight (str[i]))
+      pcl::console::reset_text_color (stdout);
+  }
 }
 

@@ -136,7 +136,12 @@ namespace tviewer
 
       void dispatch (const pcl::visualization::KeyboardEvent& key_event);
 
-      std::string getHelp () const;
+      void printHelp () const;
+
+      /** A helper function to print a string to console highlighting the
+        * characters for which a given function \a highlight returns \c true. */
+      static void
+      printWithHighlight (const std::string& str, std::function<bool (char)> highlight);
 
       std::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
 
