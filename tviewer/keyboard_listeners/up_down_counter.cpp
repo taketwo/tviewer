@@ -98,7 +98,7 @@ tviewer::UpDownCounter<T>::set (T value)
   on_change_callback_ (counter_);
   if (print_on_change_)
   {
-    pcl::console::print_info ("%s: ", name_.c_str ());
+    pcl::console::print_info ("%s: ", description_.c_str ());
     pcl::console::print_value ("%s\n", boost::lexical_cast<std::string> (counter_).c_str ());
   }
 }
