@@ -27,62 +27,68 @@
 #include <pcl/common/io.h>
 #include <pcl/common/random.h>
 #include <pcl/common/generate.h>
-#include <pcl/features/normal_3d.h>
 
 #include "tviewer/tviewer.h"
 
-void
-generateRandomPlanarCloud (pcl::PointCloud<pcl::PointXYZ>& cloud)
+using namespace tviewer;
+
+template <typename PointT> void
+generatePointCube (pcl::PointCloud<PointT>& cloud, int n, float step, bool random_colors)
 {
-  using namespace pcl::common;
-  UniformGenerator<float>::Parameters x (-1.0f, 1.0f, time (0) + 0);
-  UniformGenerator<float>::Parameters y (-1.0f, 1.0f, time (0) + 1);
-  UniformGenerator<float>::Parameters z ( 1.0f, 1.05f, time (0) + 2);
-  CloudGenerator<pcl::PointXYZ, UniformGenerator<float>> generator (x, y, z);
   cloud.clear ();
-  generator.fill (2000, 1, cloud);
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      for (int k = 0; k < n; ++k)
+      {
+        PointT point;
+        point.x = i * step;
+        point.y = j * step;
+        point.z = k * step;
+        point.rgba = random_colors ? generateRandomColor () : 0xFFF000;
+        cloud.push_back (point);
+      }
+    }
+  }
 }
 
 int main (int argc, char** argv)
 {
-  using namespace tviewer;
   auto viewer = create ();
 
-  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-  generateRandomPlanarCloud (*cloud);
+  pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cube (new pcl::PointCloud<pcl::PointXYZRGBA>);
+  generatePointCube (*cube, 5, 0.1f, false);
 
   viewer->add
-  ( CreatePointCloudObject<pcl::PointXYZ> ("cloud", "c")
-  . description                           ("Random point cloud")
-  . onUpdate                              ([&]{ generateRandomPlanarCloud (*cloud); return cloud; })
-  . pointSize                             (4)
-  . visibility                            (0.9)
-  . color                                 (generateRandomColor ())
+  ( CreatePointCloudObject<pcl::PointXYZRGBA> ("cube", "p")
+  . description ("Point cube")
+  . data (cube)
+  . pointSize (5)
+  . visibility (0.9)
   );
+
+  BinaryStateSwitch::Ptr random_colors
+  = CreateBinaryStateSwitch ("mode", "m")
+  . description             ("Use random colors")
+  . init                    (false)
+  . printOnChange           ();
 
   viewer->addListener
-  ( CreateUpDownCounter<float> ("smoothing sigma", "s")
-  . description                ("Smoothing sigma for mesh bilateral filter")
-  . min                        (0)
-  . max                        (2)
-  . step                       (0.1)
-  . printOnChange              ()
-  . onChange                   ([](float v) { std::cout << "This is a callback!\n"; })
-  , { "cloud" }
+  ( CreateUpDownCounter<int> ("side", "s")
+  . description              ("Cube side length")
+  . init                     (5)
+  . min                      (2)
+  . max                      (20)
+  . step                     (1)
+  . wrapAround               ()
+  . onChange                 ([&](float v){ generatePointCube (*cube, v, 0.1f, *random_colors); })
+  , { "cube" }
   );
 
-  UpDownCounter<int>::Ptr foobar = CreateUpDownCounter<int> ("foobar", "f").printOnChange ();
-  viewer->addListener (foobar);
+  viewer->addListener (random_colors);
 
-  viewer->update ();
-  viewer->show ();
-
-  while (viewer->waitKeyPressed ({"i"}))
-  {
-    int k = *foobar;
-    std::cout << "Foobar = " << k << std::endl;
-    viewer->update ();
-  }
+  viewer->show ("cube");
 
   return 0;
 }
