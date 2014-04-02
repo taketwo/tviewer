@@ -31,9 +31,10 @@
 namespace tviewer
 {
 
-  /** Visualization object that displays a cloud of points with normals.
-    *
-    * \ingroup public */
+  /// \addtogroup public
+  /// @{
+
+  /** Visualization object that displays a cloud of points with normals. */
   class NormalCloudObject : public VisualizationObject
   {
 
@@ -103,6 +104,8 @@ namespace tviewer
 
   };
 
+  /** Helper class that provides a fluent interface to simplify instantiation of
+    * NormalCloudObject. */
   class CreateNormalCloudObject
   {
 
@@ -127,20 +130,33 @@ namespace tviewer
 
     public:
 
+      /** Constructor that takes required configuration parameters. */
       CreateNormalCloudObject (const std::string& name, const std::string& key)
       : name_ (name)
       , key_ (key)
       {
       }
 
+      /** Cast operator to NormalCloudObject::Ptr.
+        *
+        * This function performs instantiation of a NormalCloudObject. It is
+        * supposed to be called after configuring the object using the fluent
+        * interface functions. */
       operator std::shared_ptr<NormalCloudObject> ();
 
+      /** Cast operator to VisualizationObject::Ptr.
+        *
+        * This function performs instantiation of a NormalCloudObject. It is
+        * supposed to be called after configuring the object using the fluent
+        * interface functions. */
       inline operator std::shared_ptr<VisualizationObject> ()
       {
         return this->operator std::shared_ptr<NormalCloudObject> ();
       }
 
   };
+
+  /// @}
 
 }
 

@@ -32,9 +32,10 @@
 namespace tviewer
 {
 
-  /** Visualization object that displays a cloud of points.
-    *
-    * \ingroup public */
+  /// \addtogroup public
+  /// @{
+
+  /** Visualization object that displays a cloud of points. */
   template <typename PointT>
   class PointCloudObject : public VisualizationObject
   {
@@ -68,6 +69,9 @@ namespace tviewer
         * \param[in] point_size size of points
         * \param[in] visibility opacity of points (0.0 is transparent, 1.0 is
         *            opaque)
+        * \param[in] use_fixed_color if set to \c true will ignore the color
+        *            data stored in points (if any) and display them using a
+        *            fixed color (as given by \c color parameter)
         * \param[in] color color of points */
       PointCloudObject (const std::string& name,
                         const std::string& description,
@@ -120,6 +124,8 @@ namespace tviewer
 
   };
 
+  /** Helper class that provides a fluent interface to simplify instantiation of
+    * PointCloudObject. */
   template <typename T>
   class CreatePointCloudObject
   {
@@ -146,20 +152,33 @@ namespace tviewer
 
     public:
 
+      /** Constructor that takes required configuration parameters. */
       CreatePointCloudObject (const std::string& name, const std::string& key)
       : name_ (name)
       , key_ (key)
       {
       }
 
+      /** Cast operator to PointCloudObject<T>::Ptr.
+        *
+        * This function performs instantiation of an PointCloudObject. It is
+        * supposed to be called after configuring the object using the fluent
+        * interface functions. */
       operator std::shared_ptr<PointCloudObject<T>> ();
 
+      /** Cast operator to VisualizationObject::Ptr.
+        *
+        * This function performs instantiation of an PointCloudObject. It is
+        * supposed to be called after configuring the object using the fluent
+        * interface functions. */
       inline operator std::shared_ptr<VisualizationObject> ()
       {
         return this->operator std::shared_ptr<PointCloudObject<T>> ();
       }
 
   };
+
+  /// @}
 
 }
 
