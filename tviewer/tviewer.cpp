@@ -353,17 +353,14 @@ tviewer::TViewerImpl::waitPointSelected (Color& point_color)
       index = last_point_picking_event_->getPointIndex ();
       last_point_picking_event_->getPoint (x, y, z);
       last_point_picking_event_ = boost::none;
-      std::cout << "Point picked" << x << y<< z<< " " << index << "\n";
       // Iterate over visualization objects and find which one owns the point
       for (const auto& object : objects_)
       {
         if (!object->visible_)
           continue;
-        std::cout << "visible object " << object->name_ << "\n";
         pcl::PointXYZRGBA pt;
         if (object->at (index, pt))  // will return false if object is not a point cloud
         {
-          std::cout << "got something at this index\n";
           using namespace pcl::utils;
           if (equal (x, pt.x) && equal (y, pt.y) && equal (z, pt.z))
           {
