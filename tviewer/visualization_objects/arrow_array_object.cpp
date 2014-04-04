@@ -42,7 +42,9 @@ tviewer::ArrowArrayObject::addDataToVisualizer (pcl::visualization::PCLVisualize
     p2.getVector3fMap () = invert_direction_ ? arrow.source : arrow.target;
     float r, g, b;
     std::tie (r, g, b) = getRGBFromColor (arrow.color);
-    v.addArrow (p1, p2, r, g, b, false, createId (i));
+    // Counter-intuitively, the arrow head is attached to the first point, so
+    // we pass the target first.
+    v.addArrow (p2, p1, r, g, b, false, createId (i));
   }
 }
 
