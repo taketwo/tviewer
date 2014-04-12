@@ -71,13 +71,13 @@ namespace tviewer
     protected:
 
       virtual void
-      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const override
+      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override
       {
         v.addModelFromPolyData (data_, name_);
       }
 
       virtual void
-      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const override
+      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override
       {
         v.removeShape (name_);
       }

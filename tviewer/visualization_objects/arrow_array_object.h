@@ -87,10 +87,10 @@ namespace tviewer
     protected:
 
       virtual void
-      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const override;
+      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
-      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const override;
+      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
       updateData () override;

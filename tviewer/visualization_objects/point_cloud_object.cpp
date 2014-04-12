@@ -34,7 +34,7 @@ tviewer::PointCloudObject<PointT>::at_ (size_t index, boost::any& item) const
 }
 
 template <typename PointT> void
-tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   v.addPointCloud (data_, name_);
   v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
@@ -48,13 +48,13 @@ tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLV
 }
 
 template <typename PointT> void
-tviewer::PointCloudObject<PointT>::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::PointCloudObject<PointT>::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   v.removePointCloud (name_);
 }
 
 template <typename PointT> void
-tviewer::PointCloudObject<PointT>::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::PointCloudObject<PointT>::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   v.updatePointCloud (data_, name_);
 }

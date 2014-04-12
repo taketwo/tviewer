@@ -32,7 +32,7 @@ tviewer::ArrowArrayObject::createId (size_t i) const
 }
 
 void
-tviewer::ArrowArrayObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::ArrowArrayObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   for (size_t i = 0; i < data_->size (); ++i)
   {
@@ -49,7 +49,7 @@ tviewer::ArrowArrayObject::addDataToVisualizer (pcl::visualization::PCLVisualize
 }
 
 void
-tviewer::ArrowArrayObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::ArrowArrayObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   for (size_t i = 0; i < data_->size (); ++i)
     v.removeShape (createId (i));

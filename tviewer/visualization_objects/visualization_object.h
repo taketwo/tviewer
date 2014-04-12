@@ -125,14 +125,14 @@ namespace tviewer
         * This function is called from show() and has to be implemented in a
         * deriving class. */
       virtual void
-      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const = 0;
+      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) = 0;
 
       /** Remove the underlying data from the PCL Visualizer.
         *
         * This function is called from hide() and has to be implemented in a
         * deriving class. */
       virtual void
-      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const = 0;
+      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) = 0;
 
       /** Refresh the underlying data in the PCL Visualizer.
         *
@@ -141,7 +141,7 @@ namespace tviewer
         * there might be a more optimal way to refresh the display, in which
         * case a deriving class should override this function. */
       virtual void
-      refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) const;
+      refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v);
 
       /** Retrieve new underlying data.
         *

@@ -92,7 +92,7 @@ tviewer::VisualizationObject::execute (const pcl::visualization::KeyboardEvent& 
 }
 
 void
-tviewer::VisualizationObject::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) const
+tviewer::VisualizationObject::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   this->removeDataFromVisualizer (v);
   this->addDataToVisualizer (v);

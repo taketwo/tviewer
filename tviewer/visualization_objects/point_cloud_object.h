@@ -98,13 +98,13 @@ namespace tviewer
       at_ (size_t index, boost::any& item) const override;
 
       virtual void
-      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) const override;
+      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
-      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) const override;
+      removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
-      refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) const override;
+      refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
       updateData () override;
