@@ -76,7 +76,7 @@ namespace tviewer
                         const std::string& key,
                         const ArrowsPtr& data,
                         const RetrieveFunction& retrieve,
-                        bool invert_direction = false)
+                        bool invert_direction)
       : VisualizationObject (name, description, key)
       , data_ (data)
       , retrieve_ (retrieve)
@@ -103,6 +103,7 @@ namespace tviewer
       ArrowsPtr data_;
       RetrieveFunction retrieve_;
       bool invert_direction_;
+      std::vector<std::string> arrows_in_visualizer_;
 
   };
 

@@ -42,17 +42,19 @@ tviewer::ArrowArrayObject::addDataToVisualizer (pcl::visualization::PCLVisualize
     p2.getVector3fMap () = invert_direction_ ? arrow.source : arrow.target;
     float r, g, b;
     std::tie (r, g, b) = getRGBFromColor (arrow.color);
+    arrows_in_visualizer_.push_back (createId (i));
     // Counter-intuitively, the arrow head is attached to the first point, so
     // we pass the target first.
-    v.addArrow (p2, p1, r, g, b, false, createId (i));
+    v.addArrow (p2, p1, r, g, b, false, arrows_in_visualizer_.back ());
   }
 }
 
 void
 tviewer::ArrowArrayObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  for (size_t i = 0; i < data_->size (); ++i)
-    v.removeShape (createId (i));
+  for (const auto& id : arrows_in_visualizer_)
+    v.removeShape (id);
+  arrows_in_visualizer_.clear ();
 }
 
 void
