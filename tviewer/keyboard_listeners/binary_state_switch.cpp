@@ -30,14 +30,16 @@ tviewer::BinaryStateSwitch::BinaryStateSwitch (const std::string& name,
                                                const std::string& description,
                                                const std::string& key,
                                                const OnChangeCallback on_change_callback,
+                                               const StateNames& state_names,
                                                bool print_on_change,
                                                bool init)
 : KeyboardListener (name)
 , description_ (description)
 , key_ (key)
-, state_ (init)
 , on_change_callback_ (on_change_callback)
+, state_names_ (state_names)
 , print_on_change_ (print_on_change)
+, state_ (init)
 {
 }
 
@@ -60,7 +62,7 @@ tviewer::BinaryStateSwitch::getInfo (std::string& diagram,
 {
   diagram = state_ ? "  ☒  " : "  ☐  ";
   keys = key_;
-  description = description_;
+  description = description_ + " (" + state_names_[0] + "/" + state_names_[1] + ")";
 }
 
 void
@@ -73,7 +75,7 @@ tviewer::BinaryStateSwitch::set (bool value)
     if (print_on_change_)
     {
       pcl::console::print_info ("%s: ", description_.c_str ());
-      pcl::console::print_value ("%s\n", state_ ? "yes" : "no");
+      pcl::console::print_value ("%s\n", state_names_[!state_].c_str ());
     }
   }
 }

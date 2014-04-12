@@ -26,6 +26,8 @@
 /** \file binary_state_switch.h
   * Binary state switching keyboard listener */
 
+#include <array>
+
 #include "keyboard_listener.h"
 
 namespace tviewer
@@ -45,6 +47,9 @@ namespace tviewer
       /// Function to be called when the state changes.
       typedef std::function<void (bool)> OnChangeCallback;
 
+      /// Names (descriptions) of the states.
+      typedef std::array<std::string, 2> StateNames;
+
       /** Construct a binary state switch.
         *
         * \param[in] name unique name (identifier) for the keyboard listener
@@ -61,6 +66,7 @@ namespace tviewer
                          const std::string& description,
                          const std::string& key,
                          const OnChangeCallback on_change_callback,
+                         const StateNames& state_names,
                          bool print_on_change,
                          bool init);
 
@@ -103,9 +109,10 @@ namespace tviewer
 
       std::string description_;
       std::string key_;
-      bool state_;
       OnChangeCallback on_change_callback_;
+      StateNames state_names_;
       bool print_on_change_;
+      bool state_;
 
   };
 
@@ -121,13 +128,16 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
+      const BinaryStateSwitch::StateNames YESNO = {{"yes", "no"}};
+
 #include "../named_parameters/named_parameters_def.h"
 #define OWNER_TYPE CreateBinaryStateSwitch
 
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (bool, init, false);
       NAMED_PARAMETER (bool, printOnChange, false, true);
-      NAMED_PARAMETER (typename BinaryStateSwitch::OnChangeCallback, onChange, ([](bool v){}));
+      NAMED_PARAMETER (BinaryStateSwitch::StateNames, stateNames, YESNO);
+      NAMED_PARAMETER (BinaryStateSwitch::OnChangeCallback, onChange, ([](bool v){}));
 
 #include "../named_parameters/named_parameters_undef.h"
 
@@ -145,6 +155,7 @@ namespace tviewer
                                                     description_ ? *description_ : name_,
                                                     key_,
                                                     *onChange_,
+                                                    *stateNames_,
                                                     *printOnChange_,
                                                     *init_);
       }
