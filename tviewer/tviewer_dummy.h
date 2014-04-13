@@ -58,7 +58,7 @@ namespace tviewer
       { }
 
       virtual void
-      add (const VisualizationObjectPtr& object) override
+      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) override
       { }
 
       virtual void

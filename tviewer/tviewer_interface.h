@@ -61,7 +61,7 @@ namespace tviewer
 
       /** Register a new visualization object. */
       virtual void
-      add (const VisualizationObjectPtr& object) = 0;
+      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) = 0;
 
       /** Create and register a new visualization object.
         *

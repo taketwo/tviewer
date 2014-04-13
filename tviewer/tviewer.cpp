@@ -67,13 +67,18 @@ tviewer::TViewerImpl::sleep (size_t milliseconds)
 }
 
 void
-tviewer::TViewerImpl::add (const VisualizationObject::Ptr& object)
+tviewer::TViewerImpl::add (const VisualizationObject::Ptr& object, bool show, bool update)
 {
   for (const auto& obj : objects_)
     if (obj->name_ == object->name_)
       assert (false); // TODO: throw exception
   objects_.push_back (object);
   object->injectViewer (viewer_);
+
+  if (update)
+    object->update ();
+  if (show)
+    object->show ();
 }
 
 void

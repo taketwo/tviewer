@@ -56,7 +56,7 @@ namespace tviewer
       sleep (size_t milliseconds) override;
 
       virtual void
-      add (const VisualizationObjectPtr& object) override;
+      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) override;
 
       virtual void
       remove (const std::string& object_name) override;
