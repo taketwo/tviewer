@@ -20,6 +20,8 @@
  * SOFTWARE.
  ******************************************************************************/
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <pcl/console/parse.h>
 
 #include "factory.h"
@@ -38,8 +40,27 @@ namespace tviewer
   TViewerPtr
   create (int argc, char** argv)
   {
-    bool with_gui = !pcl::console::find_switch (argc, argv, "--tv-no-gui");
-    return create (with_gui);
+    if (pcl::console::find_switch (argc, argv, "--tv-no-gui"))
+    {
+      return create (false);
+    }
+    else
+    {
+      auto viewer = std::shared_ptr<TViewerImpl> (new TViewerImpl);
+      for (int i = 1; i < argc; ++i)
+      {
+        std::string arg (argv[i]);
+        if (arg.size () > 10)
+        {
+          std::string object = arg.substr (10);
+          if (boost::starts_with (arg, "--tv-show-"))
+            viewer->force_show_when_added_.insert (object);
+          if (boost::starts_with (arg, "--tv-hide-"))
+            viewer->force_hide_when_added_.insert (object);
+        }
+      }
+      return viewer;
+    }
   }
 
 }

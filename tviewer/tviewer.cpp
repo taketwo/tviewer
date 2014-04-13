@@ -77,7 +77,10 @@ tviewer::TViewerImpl::add (const VisualizationObject::Ptr& object, bool show, bo
 
   if (update)
     object->update ();
-  if (show)
+
+  bool force_show = force_show_when_added_.count (object->name_);
+  bool force_hide = force_hide_when_added_.count (object->name_);
+  if (!force_hide && (force_show || show))
     object->show ();
 }
 

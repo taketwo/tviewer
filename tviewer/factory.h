@@ -47,6 +47,19 @@ namespace tviewer
     * relevant for TViewer. These include:
     *
     * * <tt>\-\-tv-no-gui</tt>
+    *   If this option is supplied then a "no GUI" version of TViewer
+    *   (TViewerDummy) will be instantiated.
+    * * <tt>\-\-tv-show-<b>xxx</b></tt>
+    *   This is a family of options, where <tt><b>xxx</b></tt> correponds to a
+    *   name of some visualization object. Passing such an option forces
+    *   displaying of a particular visualization object after it was added.
+    *   Note that this only changes the initial state (shown/hidden) of the
+    *   object, but does not prevent changing the state of the object later on
+    *   (either through user input or programmatically).
+    * * <tt>\-\-tv-hide-<b>xxx</b></tt>
+    *   Same as "show" option, but to force hiding an object. Note that hiding
+    *   has higher priority thas showing, so if a user supplies both "show" and
+    *   "hide" options for the same object, then it will not be shown.
     *
     * \ingroup public */
   TViewerPtr

@@ -26,6 +26,10 @@
 /** \file tviewer_impl.h
   * Real implementation of TViewer interface */
 
+#include <set>
+#include <map>
+#include <vector>
+
 #include <boost/optional.hpp>
 
 #include <pcl/visualization/pcl_visualizer.h>
@@ -157,6 +161,11 @@ namespace tviewer
       std::map<std::string, std::set<std::string>> listener_dependents_;
 
       bool mode_waiting_user_input_;
+
+      // Names of the objects that should be shown/hidden when added, this is
+      // supposed to be set in the factory create() function.
+      std::set<std::string> force_show_when_added_;
+      std::set<std::string> force_hide_when_added_;
 
       friend TViewerPtr create (bool);
       friend TViewerPtr create (int argc, char** argv);
