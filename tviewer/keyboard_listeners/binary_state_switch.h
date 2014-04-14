@@ -137,7 +137,7 @@ namespace tviewer
       NAMED_PARAMETER (bool, init, false);
       NAMED_PARAMETER (bool, printOnChange, false, true);
       NAMED_PARAMETER (BinaryStateSwitch::StateNames, stateNames, YESNO);
-      NAMED_PARAMETER (BinaryStateSwitch::OnChangeCallback, onChange, ([](bool v){}));
+      NAMED_PARAMETER (BinaryStateSwitch::OnChangeCallback, onChange, ([](bool){}));
 
 #include "../named_parameters/named_parameters_undef.h"
 

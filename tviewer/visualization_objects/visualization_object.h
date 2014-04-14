@@ -115,7 +115,7 @@ namespace tviewer
         * A templated function can not be virtual, hence this trick with a
         * separate implementation and boost::any. */
       virtual bool
-      at_ (size_t index, boost::any& item) const
+      at_ (size_t, boost::any&) const
       {
         return false;
       }

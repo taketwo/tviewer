@@ -148,7 +148,7 @@ namespace tviewer
       NAMED_PARAMETER (T, step, 1);
       NAMED_PARAMETER (T, min, 0);
       NAMED_PARAMETER (T, max, std::numeric_limits<T>::max ());
-      NAMED_PARAMETER (typename UpDownCounter<T>::OnChangeCallback, onChange, ([](T v){}));
+      NAMED_PARAMETER (typename UpDownCounter<T>::OnChangeCallback, onChange, ([](T){}));
       NAMED_PARAMETER (bool, printOnChange, false, true);
       NAMED_PARAMETER (bool, wrapAround, false, true);
 

@@ -58,7 +58,7 @@ void
 tviewer::BinaryStateSwitch::getInfo (std::string& diagram,
                                      std::string& description,
                                      std::string& keys,
-                                     std::string& extra)
+                                     std::string&)
 {
   diagram = state_ ? "  ☒  " : "  ☐  ";
   keys = key_;

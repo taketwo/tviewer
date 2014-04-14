@@ -54,19 +54,19 @@ namespace tviewer
       { }
 
       virtual void
-      sleep (size_t milliseconds) override
+      sleep (size_t) override
       { }
 
       virtual void
-      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) override
+      add (const VisualizationObjectPtr&, bool = false, bool = false) override
       { }
 
       virtual void
-      remove (const std::string& object_name) override
+      remove (const std::string&) override
       { }
 
       virtual void
-      show (const std::string& object_name) override
+      show (const std::string&) override
       { }
 
       virtual void
@@ -74,7 +74,7 @@ namespace tviewer
       { }
 
       virtual void
-      hide (const std::string& object_name) override
+      hide (const std::string&) override
       { }
 
       virtual void
@@ -82,7 +82,7 @@ namespace tviewer
       { }
 
       virtual void
-      update (const std::string& object_name) override
+      update (const std::string&) override
       { }
 
       virtual void
@@ -90,24 +90,24 @@ namespace tviewer
       { }
 
       virtual void
-      addListener (const KeyboardListenerPtr& listener,
-                   std::initializer_list<std::string> dependent_objects = {})
+      addListener (const KeyboardListenerPtr&,
+                   std::initializer_list<std::string> = {})
       { }
 
       virtual void
-      removeListener (const std::string& listener_name) override
+      removeListener (const std::string&) override
       { }
 
       virtual void
-      saveCameraParameters (const std::string& filename) override
+      saveCameraParameters (const std::string&) override
       { }
 
       virtual void
-      loadCameraParameters (const std::string& filename) override
+      loadCameraParameters (const std::string&) override
       { }
 
       virtual bool
-      askYesNo (const std::string& question, bool no_with_any_key = true) override
+      askYesNo (const std::string&, bool = true) override
       { return false; }
 
       virtual bool
@@ -115,40 +115,40 @@ namespace tviewer
       { return false; }
 
       virtual bool
-      waitKeyPressed (std::string& key) override
+      waitKeyPressed (std::string&) override
       { return false; }
 
       virtual bool
-      waitKeyPressed (const std::vector<std::string>& keys) override
+      waitKeyPressed (const std::vector<std::string>&) override
       { return false; }
 
       virtual bool
-      waitKeyPressed (std::string& key, const std::vector<std::string>& keys) override
+      waitKeyPressed (std::string&, const std::vector<std::string>&) override
       { return false; }
 
       virtual bool
-      waitPointSelected (size_t& point_index, float& x, float& y, float& z) override
+      waitPointSelected (size_t&, float&, float&, float&) override
       { return false; }
 
       virtual bool
-      waitPointSelected (size_t& point_index) override
+      waitPointSelected (size_t&) override
       { return false; }
 
       virtual bool
-      waitPointSelected (Color& point_color) override
+      waitPointSelected (Color&) override
       { return false; }
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
-                                       std::vector<pcl::PointIndices>& indices,
-                                       bool skip_duplicates) override
+      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&,
+                                       std::vector<pcl::PointIndices>&,
+                                       bool) override
       { return false; }
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
-                                       bool skip_duplicates) override
+      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&,
+                                       bool) override
       { return false; }
 
-      virtual bool waitPointsSelected (std::vector<pcl::PointIndices>& indices,
-                                       bool skip_duplicates) override
+      virtual bool waitPointsSelected (std::vector<pcl::PointIndices>&,
+                                       bool) override
       { return false; }
 
     private:
