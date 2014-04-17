@@ -85,7 +85,7 @@ namespace tviewer
 
       virtual void
       addListener (const KeyboardListenerPtr& listener,
-                   std::initializer_list<std::string> dependent_objects = {}) override;
+                   const std::vector<std::string>& dependent_objects = {}) override;
 
       virtual void
       removeListener (const std::string& listener_name) override;

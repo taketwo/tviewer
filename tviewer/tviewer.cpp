@@ -143,13 +143,16 @@ tviewer::TViewerImpl::update ()
 
 void
 tviewer::TViewerImpl::addListener (const KeyboardListener::Ptr& listener,
-                                   std::initializer_list<std::string> dependent_objects)
+                                   const std::vector<std::string>& dependent_objects)
 {
   for (const auto& lst : listeners_)
     if (lst->getName () == listener->getName ())
       assert (false); // TODO: throw exception
   listeners_.push_back (listener);
-  listener_dependents_[listener->getName ()] = dependent_objects;
+  // Insert all the dependent object names in the corresponding dependents set
+  auto& dependents = listener_dependents_[listener->getName ()];
+  std::copy (dependent_objects.begin (), dependent_objects.end (),
+             std::inserter (dependents, dependents.begin ()));
 }
 
 void

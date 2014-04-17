@@ -104,7 +104,7 @@ namespace tviewer
       /** Register a new keyboard listener. */
       virtual void
       addListener (const KeyboardListenerPtr& listener,
-                   std::initializer_list<std::string> dependent_objects = {}) = 0;
+                   const std::vector<std::string>& dependent_objects = {}) = 0;
 
       /** Unregister a keyboard listener. */
       virtual void
