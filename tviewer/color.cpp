@@ -21,6 +21,7 @@
  ******************************************************************************/
 
 #include <cmath>
+#include <string>
 #include <random>
 #include <algorithm>
 
@@ -49,6 +50,19 @@ namespace tviewer
     return getColorFromRGB (static_cast<uint8_t> (std::round (clamp (r, 0.0f, 1.0f) * 255)),
                             static_cast<uint8_t> (std::round (clamp (g, 0.0f, 1.0f) * 255)),
                             static_cast<uint8_t> (std::round (clamp (b, 0.0f, 1.0f) * 255)));
+  }
+
+  Color
+  getColorFromString (const std::string& color)
+  {
+    try
+    {
+      return std::stoul (color, 0, 0);
+    }
+    catch (std::invalid_argument& e)
+    {
+      return 0;
+    }
   }
 
   std::tuple<float, float, float>

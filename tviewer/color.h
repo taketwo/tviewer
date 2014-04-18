@@ -65,6 +65,25 @@ namespace tviewer
   Color
   getColorFromRGB (float r, float g, float b);
 
+  /** Get a color from a string representation.
+    *
+    * Supported formats:
+    *
+    * * Sequence of digits representing an unsigned integer
+    *
+    *   Uses `std::stoul()` internally, therefore supports numbers given in
+    *   octal or hexadecimal base.
+    *
+    *   Examples:
+    *
+    *     * <tt>"255"</tt> : blue
+    *     * <tt>"0177400"</tt> : green
+    *     * <tt>"0xFF0000"</tt> : red
+    *
+    * For invalid string representations black color will be returned. */
+  Color
+  getColorFromString (const std::string& color);
+
   /** Get R, G, and B values (floats) from a color. */
   std::tuple<float, float, float>
   getRGBFromColor (Color color);
