@@ -130,6 +130,9 @@ namespace tviewer
       virtual bool waitPointsSelected (std::vector<pcl::PointIndices>& indices,
                                        bool skip_duplicates) override;
 
+      virtual void
+      setBackgroundColor (Color color) override;
+
     private:
 
       TViewerImpl ();

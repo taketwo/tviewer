@@ -151,6 +151,10 @@ namespace tviewer
                                        bool) override
       { return false; }
 
+      virtual void
+      setBackgroundColor (Color) override
+      { }
+
     private:
 
       TViewerDummy ()

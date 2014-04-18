@@ -248,6 +248,10 @@ namespace tviewer
       virtual bool waitPointsSelected (std::vector<pcl::PointIndices>& indices,
                                        bool skip_duplicates = true) = 0;
 
+      /** Set background color of the viewer. */
+      virtual void
+      setBackgroundColor (Color color) = 0;
+
   };
 
 }

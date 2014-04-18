@@ -39,7 +39,6 @@ tviewer::TViewerImpl::TViewerImpl ()
 : viewer_ (new pcl::visualization::PCLVisualizer ("T Viewer"))
 , mode_waiting_user_input_ (false)
 {
-  viewer_->setBackgroundColor (0, 0, 0);
   viewer_->registerKeyboardCallback (boost::bind (&TViewerImpl::keyboardEventCallback, this, _1));
   viewer_->registerPointPickingCallback (boost::bind (&TViewerImpl::pickPointEventCallback, this, _1));
   loadCameraParameters ("viewpoint.cam");
@@ -481,6 +480,14 @@ tviewer::TViewerImpl::waitPointsSelected (std::vector<pcl::PointIndices>& indice
 {
   pcl::PointCloud<pcl::PointXYZL> cloud;
   return waitPointsSelected (cloud, indices, skip_duplicates);
+}
+
+void
+tviewer::TViewerImpl::setBackgroundColor (Color color)
+{
+  float r, g, b;
+  std::tie (r, g, b) = getRGBFromColor (color);
+  viewer_->setBackgroundColor (r, g, b);
 }
 
 void
