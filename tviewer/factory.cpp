@@ -24,6 +24,7 @@
 
 #include <pcl/console/parse.h>
 
+#include "color.h"
 #include "factory.h"
 #include "tviewer_impl.h"
 #include "tviewer_dummy.h"
@@ -58,6 +59,12 @@ namespace tviewer
           if (boost::starts_with (arg, "--tv-hide-"))
             viewer->force_hide_when_added_.insert (object);
         }
+      }
+      if (pcl::console::find_switch (argc, argv, "--tv-background"))
+      {
+        std::string background;
+        pcl::console::parse (argc, argv, "--tv-background", background);
+        viewer->setBackgroundColor (getColorFromString (background));
       }
       return viewer;
     }

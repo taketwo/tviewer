@@ -33,9 +33,11 @@ namespace tviewer
 
   /** Create TViewer.
     *
-    * Depending on the \p with_gui flag either a "real" or a "dummy"
-    * implementation of TViewer interface will be instantiated. A client
-    * application can therefore get "no GUI" mode support for free.
+    * Depending on the \p with_gui flag either a "real" (TViewerImpl) or a
+    * "dummy" (TViewerDummy) implementation of TViewer interface will be
+    * instantiated. The latter provides the same interface as the functional
+    * one, but all methods are no-op. Therefore, a client application can get
+    * "no GUI" mode support for free.
     *
     * \ingroup public */
   TViewerPtr
@@ -47,19 +49,29 @@ namespace tviewer
     * relevant for TViewer. These include:
     *
     * * <tt>\-\-tv-no-gui</tt>
+    *
     *   If this option is supplied then a "no GUI" version of TViewer
     *   (TViewerDummy) will be instantiated.
+    *
     * * <tt>\-\-tv-show-<b>xxx</b></tt>
+    *
     *   This is a family of options, where <tt><b>xxx</b></tt> correponds to a
     *   name of some visualization object. Passing such an option forces
     *   displaying of a particular visualization object after it was added.
     *   Note that this only changes the initial state (shown/hidden) of the
     *   object, but does not prevent changing the state of the object later on
     *   (either through user input or programmatically).
+    *
     * * <tt>\-\-tv-hide-<b>xxx</b></tt>
+    *
     *   Same as "show" option, but to force hiding an object. Note that hiding
     *   has higher priority thas showing, so if a user supplies both "show" and
     *   "hide" options for the same object, then it will not be shown.
+    *
+    * * <tt>\-\-tv-background "color"</tt>
+    *
+    *   Force set the background color of TViewer window. Supported color
+    *   formats are given in the documentation for getColorFromString().
     *
     * \ingroup public */
   TViewerPtr
