@@ -66,6 +66,12 @@ namespace tviewer
         pcl::console::parse (argc, argv, "--tv-background", background);
         viewer->setBackgroundColor (getColorFromString (background));
       }
+      if (pcl::console::find_switch (argc, argv, "--tv-viewpoint"))
+      {
+        std::string filename;
+        pcl::console::parse (argc, argv, "--tv-viewpoint", filename);
+        viewer->loadCameraParameters (filename);
+      }
       return viewer;
     }
   }

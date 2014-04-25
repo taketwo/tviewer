@@ -73,6 +73,10 @@ namespace tviewer
     *   Force set the background color of TViewer window. Supported color
     *   formats are given in the documentation for getColorFromString().
     *
+    * * <tt>\-\-tv-viewpoint filename</tt>
+    *
+    *   Load and apply camera parameters from a given file.
+    *
     * \ingroup public */
   TViewerPtr
   create (int argc, char** argv);
