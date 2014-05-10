@@ -123,6 +123,10 @@ namespace tviewer
         * This function is case insensitive, i.e. both 'y' and 'Y' mean a
         * positive answer.
         *
+        * The "(y/n)" hint will be appended to the question text. Furthermore,
+        * after the user answers the question, the answer ("YES" or "NO") will
+        * be printed.
+        *
         * \param[in] question a question to display
         * \param[in] no_with_any_key treat any key that is not 'y' or 'Y' as no
         *
