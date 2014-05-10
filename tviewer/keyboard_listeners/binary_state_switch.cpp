@@ -24,6 +24,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "binary_state_switch.h"
+#include "../tviewer_interface.h"
 #include "../utils.h"
 
 tviewer::BinaryStateSwitch::BinaryStateSwitch (const std::string& name,
@@ -84,5 +85,13 @@ void
 tviewer::BinaryStateSwitch::flip ()
 {
   set (!state_);
+}
+
+tviewer::BinaryStateSwitch::Ptr
+tviewer::CreateBinaryStateSwitch::addToViewer (TViewerPtr viewer, std::initializer_list<std::string> dependent_objects)
+{
+  auto instance = this->operator BinaryStateSwitch::Ptr ();
+  viewer->addListener (instance, dependent_objects);
+  return instance;
 }
 

@@ -28,6 +28,7 @@
 
 #include <array>
 
+#include "../tviewer_fwd.h"
 #include "keyboard_listener.h"
 
 namespace tviewer
@@ -149,7 +150,7 @@ namespace tviewer
       {
       }
 
-      operator std::shared_ptr<BinaryStateSwitch> ()
+      operator BinaryStateSwitch::Ptr ()
       {
         return std::make_shared<BinaryStateSwitch> (name_,
                                                     description_ ? *description_ : name_,
@@ -164,6 +165,9 @@ namespace tviewer
       {
         return this->operator std::shared_ptr<BinaryStateSwitch> ();
       }
+
+      BinaryStateSwitch::Ptr
+      addToViewer (TViewerPtr viewer, std::initializer_list<std::string> dependent_objects = {});
 
   };
 
