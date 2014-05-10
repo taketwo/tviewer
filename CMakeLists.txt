@@ -10,7 +10,7 @@ option(TVIEWER_BUILD_EXAMPLES "Build tviewer examples." OFF)
 
 # Compilation
 add_definitions(-std=c++11)
-add_definitions(-Wall -pedantic)
+add_definitions(-Wall -Wextra -pedantic)
 # Boost Preprocessor library is very conservative in enabling variadics support.
 # In fact, if a compiler implements c++11, then we can be sure that variadics
 # are supported as well. This define enables preprocessor macros that require
