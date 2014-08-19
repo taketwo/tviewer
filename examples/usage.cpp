@@ -46,7 +46,7 @@ generateRandomPlanarCloud (pcl::PointCloud<pcl::PointXYZ>& cloud)
 int main (int argc, char** argv)
 {
   using namespace tviewer;
-  auto viewer = create ();
+  auto viewer = create (argc, argv);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
   generateRandomPlanarCloud (*cloud);

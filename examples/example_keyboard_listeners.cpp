@@ -55,7 +55,7 @@ generatePointCube (pcl::PointCloud<PointT>& cloud, int n, float step, bool rando
 
 int main (int argc, char** argv)
 {
-  auto viewer = create ();
+  auto viewer = create (argc, argv);
 
   pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cube (new pcl::PointCloud<pcl::PointXYZRGBA>);
   generatePointCube (*cube, 5, 0.1f, false);
