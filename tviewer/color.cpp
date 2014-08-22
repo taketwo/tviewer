@@ -24,6 +24,7 @@
 #include <string>
 #include <random>
 #include <algorithm>
+#include <stdexcept>
 
 #include "color.h"
 
