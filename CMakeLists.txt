@@ -11,11 +11,19 @@ option(TVIEWER_BUILD_EXAMPLES "Build tviewer examples." OFF)
 # Compilation
 add_definitions(-std=c++11)
 add_definitions(-Wall -Wextra -pedantic)
+# Silence warnings from vtk includes
+add_definitions(-Wno-extra-semi)
 # Boost Preprocessor library is very conservative in enabling variadics support.
 # In fact, if a compiler implements c++11, then we can be sure that variadics
 # are supported as well. This define enables preprocessor macros that require
 # variadics support (needed by 'named_parameters_def.h').
 add_definitions(-DBOOST_PP_VARIADICS=1)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions(-fcolor-diagnostics)
+endif ()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies
 find_package(Boost REQUIRED)
