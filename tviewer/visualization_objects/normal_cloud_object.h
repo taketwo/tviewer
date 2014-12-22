@@ -41,13 +41,13 @@ namespace tviewer
     public:
 
       /// Cloud of points with normals.
-      typedef pcl::PointCloud<pcl::PointNormal> NormalCloud;
+      using NormalCloud = pcl::PointCloud<pcl::PointNormal>;
 
       /// Shared pointer to a const cloud of points with normals.
-      typedef typename NormalCloud::ConstPtr NormalCloudConstPtr;
+      using NormalCloudConstPtr = NormalCloud::ConstPtr;
 
       /// Function that retrieves data for visualization.
-      typedef std::function<NormalCloudConstPtr ()> RetrieveFunction;
+      using RetrieveFunction = std::function<NormalCloudConstPtr ()>;
 
       /** Construct normal cloud visualization object.
         *
@@ -114,8 +114,8 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      typedef NormalCloudObject::NormalCloud Data;
-      typedef NormalCloudObject::NormalCloudConstPtr DataPtr;
+      using Data = NormalCloudObject::NormalCloud;
+      using DataPtr = NormalCloudObject::NormalCloudConstPtr;
 
 #include "../named_parameters/named_parameters_def.h"
 #define OWNER_TYPE CreateNormalCloudObject

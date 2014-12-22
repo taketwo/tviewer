@@ -43,13 +43,13 @@ namespace tviewer
     public:
 
       /// Shared pointer to a binary state switch.
-      typedef std::shared_ptr<BinaryStateSwitch> Ptr;
+      using Ptr = std::shared_ptr<BinaryStateSwitch>;
 
       /// Function to be called when the state changes.
-      typedef std::function<void (bool)> OnChangeCallback;
+      using OnChangeCallback = std::function<void (bool)>;
 
       /// Names (descriptions) of the states.
-      typedef std::array<std::string, 2> StateNames;
+      using StateNames = std::array<std::string, 2>;
 
       /** Construct a binary state switch.
         *

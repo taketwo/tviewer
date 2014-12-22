@@ -45,10 +45,10 @@ namespace tviewer
   };
 
   /// Array of arrows.
-  typedef std::vector<Arrow> Arrows;
+  using Arrows = std::vector<Arrow>;
 
   /// Shared pointer to an array of arrows.
-  typedef std::shared_ptr<Arrows> ArrowsPtr;
+  using ArrowsPtr = std::shared_ptr<Arrows>;
 
   /** Visualization object that displays an array of arrows. */
   class ArrowArrayObject : public VisualizationObject
@@ -57,7 +57,7 @@ namespace tviewer
     public:
 
       /// Function that retrieves data for visualization.
-      typedef std::function<ArrowsPtr ()> RetrieveFunction;
+      using RetrieveFunction = std::function<ArrowsPtr ()>;
 
       /** Construct arrow array visualization object.
         *
@@ -117,8 +117,8 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      typedef Arrows Data;
-      typedef ArrowsPtr DataPtr;
+      using Data = Arrows;
+      using DataPtr = ArrowsPtr;
 
 #include "../named_parameters/named_parameters_def.h"
 #define OWNER_TYPE CreateArrowArrayObject

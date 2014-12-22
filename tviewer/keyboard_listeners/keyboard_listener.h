@@ -49,7 +49,7 @@ namespace tviewer
     public:
 
       /// Shared pointer to a keyboard listener.
-      typedef std::shared_ptr<KeyboardListener> Ptr;
+      using Ptr = std::shared_ptr<KeyboardListener>;
 
       /** Construct a keyboard listener.
         *

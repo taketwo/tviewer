@@ -38,16 +38,16 @@ namespace tviewer
   class KeyboardListener;
 
   /// Shared pointer to an object that implements TViewer interface.
-  typedef std::shared_ptr<TViewerInterface> TViewerPtr;
+  using TViewerPtr = std::shared_ptr<TViewerInterface>;
 
   /// Shared pointer to a visualization object.
-  typedef std::shared_ptr<VisualizationObject> VisualizationObjectPtr;
+  using VisualizationObjectPtr = std::shared_ptr<VisualizationObject>;
 
   /// Shared pointer to a keyboard listener.
-  typedef std::shared_ptr<KeyboardListener> KeyboardListenerPtr;
+  using KeyboardListenerPtr = std::shared_ptr<KeyboardListener>;
 
   /// RGBA color.
-  typedef uint32_t Color;
+  using Color = uint32_t;
 
 }
 

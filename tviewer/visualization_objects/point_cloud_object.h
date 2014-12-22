@@ -43,13 +43,13 @@ namespace tviewer
     public:
 
       /// Cloud of points.
-      typedef pcl::PointCloud<PointT> PointCloud;
+      using PointCloud = pcl::PointCloud<PointT>;
 
       /// Shared pointer to a cloud of points.
-      typedef typename PointCloud::Ptr PointCloudPtr;
+      using PointCloudPtr = typename PointCloud::Ptr;
 
       /// Function that retrieves data for visualization.
-      typedef std::function<PointCloudPtr ()> RetrieveFunction;
+      using RetrieveFunction = std::function<PointCloudPtr ()>;
 
       /** Construct point cloud visualization object.
         *
@@ -135,8 +135,8 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      typedef typename PointCloudObject<T>::PointCloud Data;
-      typedef typename PointCloudObject<T>::PointCloudPtr DataPtr;
+      using Data = typename PointCloudObject<T>::PointCloud;
+      using DataPtr = typename PointCloudObject<T>::PointCloudPtr;
 
 #include "../named_parameters/named_parameters_def.h"
 #define OWNER_TYPE CreatePointCloudObject<T>

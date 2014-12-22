@@ -43,13 +43,13 @@ namespace tviewer
     public:
 
       /// Cloud of points.
-      typedef pcl::PointCloud<pcl::PointXYZRGBA> PointCloud;
+      using PointCloud = pcl::PointCloud<pcl::PointXYZRGBA>;
 
       /// Shared pointer to a cloud of points.
-      typedef typename PointCloud::Ptr PointCloudPtr;
+      using PointCloudPtr = typename PointCloud::Ptr;
 
       /// Function that retrieves data for visualization.
-      typedef std::function<PointCloudPtr ()> RetrieveFunction;
+      using RetrieveFunction = std::function<PointCloudPtr ()>;
 
       /** Construct point cloud with shuffling visualization object.
         *
@@ -109,8 +109,8 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      typedef PointCloudWithColorShufflingObject::PointCloud Data;
-      typedef PointCloudWithColorShufflingObject::PointCloudPtr DataPtr;
+      using Data = PointCloudWithColorShufflingObject::PointCloud;
+      using DataPtr = PointCloudWithColorShufflingObject::PointCloudPtr;
 
 #include "../named_parameters/named_parameters_def.h"
 #define OWNER_TYPE CreatePointCloudWithColorShufflingObject

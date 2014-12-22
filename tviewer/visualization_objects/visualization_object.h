@@ -48,7 +48,7 @@ namespace tviewer
     public:
 
       /// Shared pointer to a visualization object.
-      typedef std::shared_ptr<VisualizationObject> Ptr;
+      using Ptr = std::shared_ptr<VisualizationObject>;
 
       /** Construct a visualization object.
         *

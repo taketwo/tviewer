@@ -42,10 +42,10 @@ namespace tviewer
     public:
 
       /// Shared pointer to an up-down counter.
-      typedef std::shared_ptr<UpDownCounter> Ptr;
+      using Ptr = std::shared_ptr<UpDownCounter>;
 
       /// Function to be called when counter value changes.
-      typedef std::function<void (T)> OnChangeCallback;
+      using OnChangeCallback = std::function<void (T)>;
 
       /** Construct an up-down counter.
         *

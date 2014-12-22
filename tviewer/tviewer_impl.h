@@ -152,8 +152,8 @@ namespace tviewer
 
       std::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
 
-      typedef boost::optional<pcl::visualization::KeyboardEvent> OptionalKeyboardEvent;
-      typedef boost::optional<pcl::visualization::PointPickingEvent> OptionalPointPickingEvent;
+      using OptionalKeyboardEvent = boost::optional<pcl::visualization::KeyboardEvent>;
+      using OptionalPointPickingEvent = boost::optional<pcl::visualization::PointPickingEvent>;
 
       OptionalKeyboardEvent last_keyboard_event_;
       OptionalPointPickingEvent last_point_picking_event_;

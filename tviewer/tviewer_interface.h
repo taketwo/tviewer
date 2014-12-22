@@ -46,7 +46,7 @@ namespace tviewer
     public:
 
       /// Shared pointer to an object that implements TViewer interface.
-      typedef std::shared_ptr<TViewerInterface> Ptr;
+      using Ptr = std::shared_ptr<TViewerInterface>;
 
       virtual ~TViewerInterface ()
       { }

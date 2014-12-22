@@ -36,7 +36,7 @@ namespace tviewer
   /// @{
 
   /// RGBA color.
-  typedef uint32_t Color;
+  using Color = uint32_t;
 
   /// Color maps that associate a color to every float from [0..1].
   /// This mimics some of the standard MATLAB® color maps, see

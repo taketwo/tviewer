@@ -40,13 +40,13 @@ namespace tviewer
     public:
 
       /// Poly data.
-      typedef vtkPolyData PolyData;
+      using PolyData = vtkPolyData;
 
       /// Shared pointer to poly data.
-      typedef vtkSmartPointer<PolyData> PolyDataPtr;
+      using PolyDataPtr = vtkSmartPointer<PolyData>;
 
       /// Function that retrieves data for visualization.
-      typedef std::function<PolyDataPtr ()> RetrieveFunction;
+      using RetrieveFunction = std::function<PolyDataPtr ()>;
 
       /** Construct a visualization object using a pointer to data.
         *
