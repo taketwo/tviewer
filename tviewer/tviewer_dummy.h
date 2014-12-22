@@ -58,7 +58,7 @@ namespace tviewer
       { }
 
       virtual void
-      add (const VisualizationObjectPtr&, bool = false, bool = false) override
+      add (VisualizationObjectPtr, bool = false, bool = false) override
       { }
 
       virtual void
@@ -90,7 +90,7 @@ namespace tviewer
       { }
 
       virtual void
-      addListener (const KeyboardListenerPtr&,
+      addListener (KeyboardListenerPtr,
                    const std::vector<std::string>& = {}) override
       { }
 

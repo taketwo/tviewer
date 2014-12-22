@@ -60,7 +60,7 @@ namespace tviewer
       sleep (size_t milliseconds) override;
 
       virtual void
-      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) override;
+      add (VisualizationObjectPtr object, bool show = false, bool update = false) override;
 
       virtual void
       remove (const std::string& object_name) override;
@@ -84,7 +84,7 @@ namespace tviewer
       update () override;
 
       virtual void
-      addListener (const KeyboardListenerPtr& listener,
+      addListener (KeyboardListenerPtr listener,
                    const std::vector<std::string>& dependent_objects = {}) override;
 
       virtual void

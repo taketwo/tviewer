@@ -61,7 +61,7 @@ namespace tviewer
 
       /** Register a new visualization object. */
       virtual void
-      add (const VisualizationObjectPtr& object, bool show = false, bool update = false) = 0;
+      add (VisualizationObjectPtr object, bool show = false, bool update = false) = 0;
 
       /** Create and register a new visualization object.
         *
@@ -103,7 +103,7 @@ namespace tviewer
 
       /** Register a new keyboard listener. */
       virtual void
-      addListener (const KeyboardListenerPtr& listener,
+      addListener (KeyboardListenerPtr listener,
                    const std::vector<std::string>& dependent_objects = {}) = 0;
 
       /** Unregister a keyboard listener. */

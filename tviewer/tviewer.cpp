@@ -66,7 +66,7 @@ tviewer::TViewerImpl::sleep (size_t milliseconds)
 }
 
 void
-tviewer::TViewerImpl::add (const VisualizationObject::Ptr& object, bool show, bool update)
+tviewer::TViewerImpl::add (VisualizationObject::Ptr object, bool show, bool update)
 {
   for (const auto& obj : objects_)
     if (obj->name_ == object->name_)
@@ -141,7 +141,7 @@ tviewer::TViewerImpl::update ()
 }
 
 void
-tviewer::TViewerImpl::addListener (const KeyboardListener::Ptr& listener,
+tviewer::TViewerImpl::addListener (KeyboardListener::Ptr listener,
                                    const std::vector<std::string>& dependent_objects)
 {
   for (const auto& lst : listeners_)
