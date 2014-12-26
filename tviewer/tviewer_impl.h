@@ -133,15 +133,22 @@ namespace tviewer
       virtual void
       setBackgroundColor (Color color) override;
 
-    private:
+    protected:
 
       TViewerImpl (bool create_interactor = true);
+
+      std::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
+
+      std::vector<VisualizationObjectPtr> objects_;
+      std::vector<KeyboardListenerPtr> listeners_;
+
+      void dispatch (const pcl::visualization::KeyboardEvent& key_event);
+
+    private:
 
       void keyboardEventCallback (const pcl::visualization::KeyboardEvent& event);
 
       void pickPointEventCallback (const pcl::visualization::PointPickingEvent& event);
-
-      void dispatch (const pcl::visualization::KeyboardEvent& key_event);
 
       void printHelp () const;
 
@@ -150,16 +157,11 @@ namespace tviewer
       static void
       printWithHighlight (const std::string& str, std::function<bool (char)> highlight);
 
-      std::shared_ptr<pcl::visualization::PCLVisualizer> viewer_;
-
       using OptionalKeyboardEvent = boost::optional<pcl::visualization::KeyboardEvent>;
       using OptionalPointPickingEvent = boost::optional<pcl::visualization::PointPickingEvent>;
 
       OptionalKeyboardEvent last_keyboard_event_;
       OptionalPointPickingEvent last_point_picking_event_;
-
-      std::vector<VisualizationObjectPtr> objects_;
-      std::vector<KeyboardListenerPtr> listeners_;
 
       std::map<std::string, std::set<std::string>> listener_dependents_;
 
