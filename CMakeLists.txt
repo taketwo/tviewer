@@ -5,10 +5,10 @@ project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
-option(TVIEWER_WITH_QT "Build tviewer with Qt." OFF)
+option(WITH_QT "Build tviewer with Qt." OFF)
 
-option(TVIEWER_BUILD_DOC "Build tviewer documentation." OFF)
-option(TVIEWER_BUILD_EXAMPLES "Build tviewer examples." OFF)
+option(BUILD_DOC "Build tviewer documentation." OFF)
+option(BUILD_EXAMPLES "Build tviewer examples." OFF)
 
 # Compilation
 add_definitions(-std=c++11)
@@ -34,7 +34,7 @@ include_directories(${PCL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-if (TVIEWER_WITH_QT)
+if (WITH_QT)
   find_package(Qt4 REQUIRED COMPONENTS QTCORE QTGUI)
   include(${QT_USE_FILE})
   add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
@@ -75,13 +75,13 @@ set(TVIEWER_LIBRARIES ${LIB_NAME} CACHE STRING "TViewer libraries")
 set(TVIEWER_DEFINITIONS "-std=c++11 -DBOOST_PP_VARIADICS=1" CACHE STRING "TViewer compiler definitions")
 
 # Documentation
-if (TVIEWER_BUILD_DOC)
+if (BUILD_DOC)
   set(DOXYFILE_LATEX false)
   include(UseDoxygen)
 endif()
 
 # Examples
-if (TVIEWER_BUILD_EXAMPLES)
+if (BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
