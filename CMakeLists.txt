@@ -5,6 +5,8 @@ project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
+option(TVIEWER_WITH_QT "Build tviewer with Qt." OFF)
+
 option(TVIEWER_BUILD_DOC "Build tviewer documentation." OFF)
 option(TVIEWER_BUILD_EXAMPLES "Build tviewer examples." OFF)
 
@@ -32,6 +34,24 @@ include_directories(${PCL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+if (TVIEWER_WITH_QT)
+  find_package(Qt4 REQUIRED COMPONENTS QTCORE QTGUI)
+  include(${QT_USE_FILE})
+  add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
+  include_directories(${CMAKE_BINARY_DIR})
+  QT4_WRAP_CPP(TVIEWER_WIDGET_HEADERS_MOC
+    tviewer/tviewer_widget/tviewer_widget.h
+  )
+  QT4_WRAP_UI(TVIEWER_WIDGET_FORMS_HEADERS
+    tviewer/tviewer_widget/tviewer_widget.ui
+  )
+  set(TVIEWER_WIDGET_SOURCES
+    tviewer/tviewer_widget/tviewer_widget.cpp
+    ${TVIEWER_WIDGET_HEADERS_MOC}
+    ${TVIEWER_WIDGET_FORMS_HEADERS}
+  )
+endif ()
+
 # TViewer library
 add_library(${LIB_NAME}
   tviewer/color.cpp
@@ -46,6 +66,7 @@ add_library(${LIB_NAME}
   tviewer/visualization_objects/normal_cloud_object.cpp
   tviewer/visualization_objects/visualization_object.cpp
   tviewer/visualization_objects/point_cloud_with_color_shuffling_object.cpp
+  ${TVIEWER_WIDGET_SOURCES}
 )
 
 # Export variables
