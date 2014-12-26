@@ -69,11 +69,6 @@ add_library(${LIB_NAME}
   ${TVIEWER_WIDGET_SOURCES}
 )
 
-# Export variables
-set(TVIEWER_INCLUDE_DIRS ${libtviewer_SOURCE_DIR} CACHE STRING "TViewer include directories")
-set(TVIEWER_LIBRARIES ${LIB_NAME} CACHE STRING "TViewer libraries")
-set(TVIEWER_DEFINITIONS "-std=c++11 -DBOOST_PP_VARIADICS=1" CACHE STRING "TViewer compiler definitions")
-
 # Documentation
 if (BUILD_DOC)
   set(DOXYFILE_LATEX false)
@@ -85,3 +80,15 @@ if (BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
+install(
+  TARGETS ${LIB_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+install(
+  DIRECTORY tviewer
+  DESTINATION include
+  FILES_MATCHING PATTERN "*.h"
+                 PATTERN "*.hpp"
+)
