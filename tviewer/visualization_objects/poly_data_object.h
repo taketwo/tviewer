@@ -52,29 +52,29 @@ namespace tviewer
         *
         * \param[in] name unique name (identifier) for the object
         * \param[in] description short description of the object that will be
-        * displayed in help
+        *            displayed in help
         * \param[in] key key used to show/hide the object
         * \param[in] data poly data to display
         * \param[in] retrieve function that returns poly data that is to be
-        * displayed */
+        *            displayed
+        * \param[in] representation representation type used for rendering */
       PolyDataObject (const std::string& name,
                       const std::string& description,
                       const std::string& key,
                       const PolyDataPtr& data,
-                      const RetrieveFunction& retrieve)
+                      const RetrieveFunction& retrieve,
+                      pcl::visualization::RenderingRepresentationProperties representation)
       : VisualizationObject (name, description, key)
       , data_ (data)
       , retrieve_ (retrieve)
+      , representation_ (representation)
       {
       }
 
     protected:
 
       virtual void
-      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override
-      {
-        v.addModelFromPolyData (data_, name_);
-      }
+      addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
       virtual void
       removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override
@@ -96,6 +96,8 @@ namespace tviewer
       /// Function which retrieves new data for visualization.
       RetrieveFunction retrieve_;
 
+      pcl::visualization::RenderingRepresentationProperties representation_;
+
   };
 
   class CreatePolyDataObject
@@ -112,6 +114,7 @@ namespace tviewer
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (PolyDataObject::PolyDataPtr, data, PolyDataObject::PolyDataPtr::New ());
       NAMED_PARAMETER (PolyDataObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (pcl::visualization::RenderingRepresentationProperties, representation, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME);
 
 #include "../named_parameters/named_parameters_undef.h"
 

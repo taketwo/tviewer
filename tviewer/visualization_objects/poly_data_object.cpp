@@ -22,6 +22,13 @@
 
 #include "poly_data_object.h"
 
+void
+tviewer::PolyDataObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
+{
+  v.addModelFromPolyData (data_, name_);
+  v.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_REPRESENTATION, representation_, name_);
+}
+
 tviewer::CreatePolyDataObject::operator std::shared_ptr<PolyDataObject> ()
 {
   // Need to turn data_ into a local variable, otherwise the lambda does not
@@ -33,6 +40,7 @@ tviewer::CreatePolyDataObject::operator std::shared_ptr<PolyDataObject> ()
                                            description_ ? *description_ : name_,
                                            key_,
                                            *data_,
-                                           onUpdate_ ? *onUpdate_ : l);
+                                           onUpdate_ ? *onUpdate_ : l,
+                                           *representation_);
 }
 
