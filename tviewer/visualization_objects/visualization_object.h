@@ -107,6 +107,34 @@ namespace tviewer
         return false;
       }
 
+      /** Get the name of this visualization object. */
+      inline std::string
+      getName () const
+      {
+        return name_;
+      }
+
+      /** Get the description of this visualization object. */
+      inline std::string
+      getDescription () const
+      {
+        return description_;
+      }
+
+      /** Get the toggle key of this visualization object. */
+      inline std::string
+      getKey () const
+      {
+        return key_;
+      }
+
+      /** Get the display status of this visualization object. */
+      inline bool
+      isVisible () const
+      {
+        return visible_;
+      }
+
     protected:
 
       /** Real implementation for at() function, to be implemented in deriving
