@@ -79,6 +79,7 @@ TViewerWidget::~TViewerWidget ()
 void
 TViewerWidget::add (tviewer::VisualizationObjectPtr object, bool show, bool update)
 {
+  remove (object->getName ());
   tviewer_->add (object, show, update);
   QString name (object->getName ().c_str ());
   auto& action = actions_[object->getName ()];
@@ -100,7 +101,9 @@ void
 TViewerWidget::remove (const std::string& object_name)
 {
   tviewer_->remove (object_name);
-  actions_.erase (actions_.find (object_name));
+  auto action = actions_.find (object_name);
+  if (action != actions_.end ())
+    actions_.erase (action);
 }
 
 void
