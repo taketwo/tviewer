@@ -135,7 +135,7 @@ namespace tviewer
 
     private:
 
-      TViewerImpl ();
+      TViewerImpl (bool create_interactor = true);
 
       void keyboardEventCallback (const pcl::visualization::KeyboardEvent& event);
 

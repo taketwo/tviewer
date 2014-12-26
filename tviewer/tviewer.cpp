@@ -35,8 +35,8 @@
 #include "tviewer.h"
 #include "utils.h"
 
-tviewer::TViewerImpl::TViewerImpl ()
-: viewer_ (new pcl::visualization::PCLVisualizer ("T Viewer"))
+tviewer::TViewerImpl::TViewerImpl (bool create_interactor)
+: viewer_ (new pcl::visualization::PCLVisualizer ("T Viewer", create_interactor))
 , mode_waiting_user_input_ (false)
 {
   viewer_->registerKeyboardCallback (boost::bind (&TViewerImpl::keyboardEventCallback, this, _1));
