@@ -26,6 +26,20 @@ namespace detail
       }
 
       virtual void
+      add (tviewer::VisualizationObjectPtr object, bool show = false, bool update = false) override
+      {
+        TViewerImpl::add (object, show, update);
+        qvtk_widget_->update ();
+      }
+
+      virtual void
+      remove (const std::string& object_name) override
+      {
+        TViewerImpl::remove (object_name);
+        qvtk_widget_->update ();
+      }
+
+      virtual void
       show (const std::string& object_name) override
       {
         TViewerImpl::show (object_name);
