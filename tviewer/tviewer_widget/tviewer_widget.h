@@ -87,7 +87,13 @@ class TViewerWidget : public QVTKWidget
   public Q_SLOTS:
 
     void
-    onMenuActionToggled (const QString& name);
+    onVisibilityActionToggled (const QString& name);
+
+    void
+    onSaveViewpointActionTriggered ();
+
+    void
+    onLoadViewpointActionTriggered ();
 
   private:
 
@@ -98,6 +104,9 @@ class TViewerWidget : public QVTKWidget
     std::unique_ptr<QMenu> menu_;
     std::unique_ptr<QSignalMapper> action_signal_mapper_;
     std::map<std::string, std::unique_ptr<QAction>> actions_;
+
+    std::unique_ptr<QAction> save_viewpoint_action_;
+    std::unique_ptr<QAction> load_viewpoint_action_;
 
 };
 

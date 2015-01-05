@@ -73,15 +73,28 @@ namespace detail
 TViewerWidget::TViewerWidget (QWidget* parent)
 : QVTKWidget (parent)
 , ui_ (new Ui::TViewerWidget)
+, save_viewpoint_action_ (new QAction ("Save viewpoint", 0))
+, load_viewpoint_action_ (new QAction ("Load viewpoint", 0))
 {
   ui_->setupUi (this);
   tviewer_.reset (new detail::TViewerWidgetImpl (this));
   menu_.reset (new QMenu ("TViewer"));
+  connect (save_viewpoint_action_.get (),
+           SIGNAL (triggered ()),
+           this,
+           SLOT (onSaveViewpointActionTriggered ()));
+  menu_->addAction (save_viewpoint_action_.get ());
+  connect (load_viewpoint_action_.get (),
+           SIGNAL (triggered ()),
+           this,
+           SLOT (onLoadViewpointActionTriggered ()));
+  menu_->addAction (load_viewpoint_action_.get ());
+  // TODO: add separator
   action_signal_mapper_.reset (new QSignalMapper (this));
   connect (action_signal_mapper_.get (),
            SIGNAL (mapped (const QString&)),
            this,
-           SLOT (onMenuActionToggled (const QString&)));
+           SLOT (onVisibilityActionToggled (const QString&)));
 }
 
 TViewerWidget::~TViewerWidget ()
@@ -161,12 +174,25 @@ TViewerWidget::contextMenuEvent (QContextMenuEvent* event)
 }
 
 void
-TViewerWidget::onMenuActionToggled (const QString& name)
+TViewerWidget::onVisibilityActionToggled (const QString& name)
 {
   auto object_name = name.toStdString ();
   if (actions_[object_name]->isChecked ())
     tviewer_->show (object_name);
   else
     tviewer_->hide (object_name);
+}
+
+void
+TViewerWidget::onSaveViewpointActionTriggered ()
+{
+  tviewer_->saveCameraParameters ("viewpoint.cam");
+}
+
+void
+TViewerWidget::onLoadViewpointActionTriggered ()
+{
+  if (boost::filesystem::exists ("viewpoint.cam"))
+    tviewer_->loadCameraParameters ("viewpoint.cam");
 }
 
