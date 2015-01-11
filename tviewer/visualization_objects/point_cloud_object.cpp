@@ -86,12 +86,12 @@ tviewer::CreatePointCloudObject<T>::operator std::shared_ptr<PointCloudObject<T>
 }
 
 template class tviewer::PointCloudObject<pcl::PointXYZ>;
-//template class tviewer::PointCloudObject<pcl::PointXYZL>;
+template class tviewer::PointCloudObject<pcl::PointXYZL>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGB>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGBA>;
 
 template class tviewer::CreatePointCloudObject<pcl::PointXYZ>;
-//template class tviewer::CreatePointCloudObject<pcl::PointXYZL>;
+template class tviewer::CreatePointCloudObject<pcl::PointXYZL>;
 template class tviewer::CreatePointCloudObject<pcl::PointXYZRGB>;
 template class tviewer::CreatePointCloudObject<pcl::PointXYZRGBA>;
 
