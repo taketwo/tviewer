@@ -89,7 +89,7 @@ TViewerWidget::TViewerWidget (QWidget* parent)
            this,
            SLOT (onLoadViewpointActionTriggered ()));
   menu_->addAction (load_viewpoint_action_.get ());
-  // TODO: add separator
+  menu_->addSeparator ();
   action_signal_mapper_.reset (new QSignalMapper (this));
   connect (action_signal_mapper_.get (),
            SIGNAL (mapped (const QString&)),
