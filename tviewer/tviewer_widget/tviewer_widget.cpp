@@ -1,5 +1,7 @@
 #include <vtkRenderWindow.h>
 
+#include <pcl/common/utils.h>
+
 #include "../tviewer.h"
 #include "tviewer_widget.h"
 #include "ui_tviewer_widget.h"
@@ -12,6 +14,8 @@ namespace detail
 
     public:
 
+      using PickPointCallback = std::function<void(const std::string&, size_t index)>;
+
       TViewerWidgetImpl (QVTKWidget* parent)
       : tviewer::TViewerImpl (false)
       , qvtk_widget_ (parent)
@@ -19,6 +23,8 @@ namespace detail
         parent->SetRenderWindow (viewer_->getRenderWindow ());
         viewer_->setupInteractor (parent->GetInteractor (),
                                   parent->GetRenderWindow ());
+        viewer_->registerPointPickingCallback (boost::bind (&TViewerWidgetImpl::pickPointEventCallback, this, _1));
+        // TODO: application using this widget will crash if E is pressed
       }
 
       virtual ~TViewerWidgetImpl ()
@@ -60,11 +66,43 @@ namespace detail
         qvtk_widget_->update ();
       }
 
+      void
+      setPickPointCallback (PickPointCallback callback)
+      {
+        pick_point_callback_ = callback;
+      }
+
     private:
 
       TViewerWidgetImpl () = delete;
 
+      void
+      pickPointEventCallback (const pcl::visualization::PointPickingEvent& event)
+      {
+        // No need to process event if there is no callback
+        if (!pick_point_callback_)
+          return;
+        using namespace pcl::utils;
+        size_t index;
+        float x, y, z;
+        index = event.getPointIndex ();
+        event.getPoint (x, y, z);
+        // Iterate over visualization objects and find who owns a point with
+        // given index and coordinate. For each one trigger a callback.
+        for (const auto& object : objects_)
+        {
+          if (object->isVisible ())
+          {
+            float px, py, pz;
+            if (object->at (index, px, py, pz))
+              if (equal (x, px) && equal (y, py) && equal (z, pz))
+                pick_point_callback_ (object->getName (), index);
+          }
+        }
+      }
+
       QVTKWidget* qvtk_widget_;
+      PickPointCallback pick_point_callback_;
 
   };
 
@@ -78,6 +116,11 @@ TViewerWidget::TViewerWidget (QWidget* parent)
 {
   ui_->setupUi (this);
   tviewer_.reset (new detail::TViewerWidgetImpl (this));
+  tviewer_->setPickPointCallback
+    ([this](const std::string& object, size_t index)
+    {
+      pointPicked (QString (object.c_str ()), index);
+    });
   menu_.reset (new QMenu ("TViewer"));
   connect (save_viewpoint_action_.get (),
            SIGNAL (triggered ()),

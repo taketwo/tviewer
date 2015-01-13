@@ -95,6 +95,11 @@ class TViewerWidget : public QVTKWidget
     void
     onLoadViewpointActionTriggered ();
 
+  Q_SIGNALS:
+
+    void
+    pointPicked (QString name, int index);
+
   private:
 
     Ui::TViewerWidget* ui_;
