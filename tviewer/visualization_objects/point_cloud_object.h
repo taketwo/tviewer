@@ -92,6 +92,9 @@ namespace tviewer
       {
       }
 
+      virtual bool
+      at (size_t index, float& x, float& y, float& z) const override;
+
     protected:
 
       virtual bool

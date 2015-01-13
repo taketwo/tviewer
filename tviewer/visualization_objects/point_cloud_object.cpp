@@ -23,6 +23,20 @@
 #include "point_cloud_object.h"
 
 template <typename PointT> bool
+tviewer::PointCloudObject<PointT>::at (size_t index, float& x, float& y, float& z) const
+{
+  if (data_ && index < data_->size ())
+  {
+    const auto& p = data_->at (index);
+    x = p.x;
+    y = p.y;
+    z = p.z;
+    return true;
+  }
+  return false;
+}
+
+template <typename PointT> bool
 tviewer::PointCloudObject<PointT>::at_ (size_t index, boost::any& item) const
 {
   if (data_ && index < data_->size ())

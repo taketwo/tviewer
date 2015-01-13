@@ -84,7 +84,7 @@ namespace tviewer
       virtual bool
       execute (const pcl::visualization::KeyboardEvent& key_event);
 
-      /** Get data element with given index.
+      /** Get the data element with given index.
         *
         * \return \c true if element with such index exists and can be cast to
         * the specified type, \c false otherwise */
@@ -104,6 +104,16 @@ namespace tviewer
             return false;
           }
         }
+        return false;
+      }
+
+      /** Get coordinates of the data element with given index.
+        *
+        * \return \c true if element with such index exists and has associated
+        * coordinates, \c false otherwise */
+      virtual bool
+      at (size_t, float&, float&, float&) const
+      {
         return false;
       }
 
