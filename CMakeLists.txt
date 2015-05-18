@@ -35,8 +35,11 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 if (WITH_QT)
-  find_package(Qt4 REQUIRED COMPONENTS QTCORE QTGUI)
+  find_package(Qt4 REQUIRED)
+  find_package(VTK REQUIRED)
   include(${QT_USE_FILE})
+  include(${VTK_USE_FILE})
+  list(APPEND QT_LIBRARIES ${VTK_LIBRARIES} QVTK)
   add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
   include_directories(${CMAKE_BINARY_DIR})
   QT4_WRAP_CPP(TVIEWER_WIDGET_HEADERS_MOC
@@ -67,6 +70,10 @@ add_library(${LIB_NAME}
   tviewer/visualization_objects/visualization_object.cpp
   tviewer/visualization_objects/point_cloud_with_color_shuffling_object.cpp
   ${TVIEWER_WIDGET_SOURCES}
+)
+target_link_libraries(${LIB_NAME}
+  ${PCL_LIBRARIES}
+  ${QT_LIBRARIES}
 )
 
 # Documentation
