@@ -90,6 +90,8 @@ int main (int argc, char** argv)
 
   viewer->show ("cube");
 
+  viewer->run ();
+
   return 0;
 }
 
