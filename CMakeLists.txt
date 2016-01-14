@@ -5,7 +5,7 @@ project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
-option(WITH_QT "Build tviewer with Qt." OFF)
+option(WITH_QT "Build tviewer with Qt5 support." OFF)
 
 option(BUILD_DOC "Build tviewer documentation." OFF)
 option(BUILD_EXAMPLES "Build tviewer examples." OFF)
@@ -21,9 +21,9 @@ add_definitions(-Wno-extra-semi)
 # variadics support (needed by 'named_parameters_def.h').
 add_definitions(-DBOOST_PP_VARIADICS=1)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-fcolor-diagnostics)
-endif ()
+endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -34,26 +34,21 @@ include_directories(${PCL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-if (WITH_QT)
-  find_package(Qt4 REQUIRED)
-  find_package(VTK REQUIRED)
-  include(${QT_USE_FILE})
-  include(${VTK_USE_FILE})
-  list(APPEND QT_LIBRARIES ${VTK_LIBRARIES} QVTK)
+if(WITH_QT)
+  find_package(Qt5Widgets REQUIRED)
+  # Find includes in corresponding build directories
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
+  # Instruct CMake to run moc automatically when needed.
+  set(CMAKE_AUTOMOC ON)
   add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
-  include_directories(${CMAKE_BINARY_DIR})
-  QT4_WRAP_CPP(TVIEWER_WIDGET_HEADERS_MOC
-    tviewer/tviewer_widget/tviewer_widget.h
-  )
-  QT4_WRAP_UI(TVIEWER_WIDGET_FORMS_HEADERS
+  qt5_wrap_ui(TVIEWER_WIDGET_FORMS_HEADERS
     tviewer/tviewer_widget/tviewer_widget.ui
   )
   set(TVIEWER_WIDGET_SOURCES
     tviewer/tviewer_widget/tviewer_widget.cpp
-    ${TVIEWER_WIDGET_HEADERS_MOC}
     ${TVIEWER_WIDGET_FORMS_HEADERS}
   )
-endif ()
+endif()
 
 # TViewer library
 add_library(${LIB_NAME}
@@ -73,17 +68,22 @@ add_library(${LIB_NAME}
 )
 target_link_libraries(${LIB_NAME}
   ${PCL_LIBRARIES}
-  ${QT_LIBRARIES}
 )
 
+if(WITH_QT)
+  qt5_use_modules(${LIB_NAME}
+    Widgets
+  )
+endif()
+
 # Documentation
-if (BUILD_DOC)
+if(BUILD_DOC)
   set(DOXYFILE_LATEX false)
   include(UseDoxygen)
 endif()
 
 # Examples
-if (BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
