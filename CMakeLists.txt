@@ -5,7 +5,7 @@ project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
-option(WITH_QT "Build tviewer with Qt5 support." OFF)
+option(WITH_QT "Build tviewer with Qt support." OFF)
 
 option(BUILD_DOC "Build tviewer documentation." OFF)
 option(BUILD_EXAMPLES "Build tviewer examples." OFF)
@@ -35,13 +35,29 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 if(WITH_QT)
-  find_package(Qt5Widgets REQUIRED)
+  if(VTK_VERSION VERSION_LESS "6.0")
+    message(STATUS "VTK version is 5 or below, therefore using Qt4")
+    find_package(Qt4 REQUIRED)
+    include(${QT_USE_FILE})
+    include(${VTK_USE_FILE})
+    macro(qt_wrap_ui)
+      qt4_wrap_ui(${ARGN})
+    endmacro()
+    list(APPEND VTK_LIBRARIES QVTK)
+  else()
+    message(STATUS "VTK version is 6 or above, therefore using Qt5")
+    find_package(Qt5Widgets REQUIRED)
+    macro(qt_wrap_ui)
+      qt5_wrap_ui(${ARGN})
+    endmacro()
+    set(QT_LIBRARIES ${Qt5Widgets_LIBRARIES})
+  endif()
   # Find includes in corresponding build directories
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   # Instruct CMake to run moc automatically when needed.
   set(CMAKE_AUTOMOC ON)
   add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
-  qt5_wrap_ui(TVIEWER_WIDGET_FORMS_HEADERS
+  qt_wrap_ui(TVIEWER_WIDGET_FORMS_HEADERS
     tviewer/tviewer_widget/tviewer_widget.ui
   )
   set(TVIEWER_WIDGET_SOURCES
@@ -68,13 +84,9 @@ add_library(${LIB_NAME}
 )
 target_link_libraries(${LIB_NAME}
   ${PCL_LIBRARIES}
+  ${VTK_LIBRARIES}
+  ${QT_LIBRARIES}
 )
-
-if(WITH_QT)
-  qt5_use_modules(${LIB_NAME}
-    Widgets
-  )
-endif()
 
 # Documentation
 if(BUILD_DOC)
