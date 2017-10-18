@@ -40,9 +40,10 @@ namespace tviewer
   Color
   getColorFromRGB (uint8_t r, uint8_t g, uint8_t b)
   {
-    return static_cast<uint32_t> (r) << 16 |
-           static_cast<uint32_t> (g) <<  8 |
-           static_cast<uint32_t> (b);
+    return 0xFF                      << 24 |  // Alpha
+           static_cast<uint32_t> (r) << 16 |  // Red
+           static_cast<uint32_t> (g) <<  8 |  // Green
+           static_cast<uint32_t> (b);         // Blue
   }
 
   Color

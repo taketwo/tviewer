@@ -46,7 +46,7 @@ generatePointCube (pcl::PointCloud<PointT>& cloud, int n, float step, bool rando
         point.x = i * step;
         point.y = j * step;
         point.z = k * step;
-        point.rgba = random_colors ? generateRandomColor () : 0xFFF000;
+        point.rgba = random_colors ? generateRandomColor () : 0xFFFFF000;
         cloud.push_back (point);
       }
     }
@@ -65,7 +65,6 @@ int main (int argc, char** argv)
   . description ("Point cube")
   . data (cube)
   . pointSize (5)
-  . visibility (0.9)
   );
 
   BinaryStateSwitch::Ptr random_colors
