@@ -38,7 +38,7 @@ option(BUILD_EXAMPLES "Build tviewer examples." OFF)
 
 # Dependencies
 find_package(Boost REQUIRED)
-find_package(PCL 1.7 REQUIRED COMPONENTS common visualization)
+find_package(PCL 1.8 REQUIRED COMPONENTS common visualization)
 include_directories(${PCL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
