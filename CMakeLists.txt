@@ -4,28 +4,37 @@ set(LIB_NAME tviewer)
 project("lib${LIB_NAME}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(WITH_QT "Build tviewer with Qt support." OFF)
-
-option(BUILD_DOC "Build tviewer documentation." OFF)
-option(BUILD_EXAMPLES "Build tviewer examples." OFF)
+# Set build type to Release if not specified by user
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "-- No build type specified; defaulting to CMAKE_BUILD_TYPE=Release")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel" FORCE)
+endif()
 
 # Compilation
 add_definitions(-std=c++11)
-add_definitions(-Wall -Wextra -pedantic)
+add_definitions(-Wall -Wextra)
 # Silence warnings from vtk includes
 add_definitions(-Wno-extra-semi)
+add_definitions(-Wno-comment)
 # Boost Preprocessor library is very conservative in enabling variadics support.
 # In fact, if a compiler implements c++11, then we can be sure that variadics
 # are supported as well. This define enables preprocessor macros that require
 # variadics support (needed by 'named_parameters_def.h').
 add_definitions(-DBOOST_PP_VARIADICS=1)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  add_definitions(-fcolor-diagnostics)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.8.5)
+  # Color diagnostics output was added in GCC 4.9.0 (and GCC 4.8.5 was the last release in the 4.8 series).
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
 endif()
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Options
+option(WITH_QT "Build tviewer with Qt support." OFF)
+option(BUILD_DOC "Build tviewer documentation." OFF)
+option(BUILD_EXAMPLES "Build tviewer examples." OFF)
 
 # Dependencies
 find_package(Boost REQUIRED)
