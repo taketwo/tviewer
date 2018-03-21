@@ -101,12 +101,14 @@ target_link_libraries(${LIB_NAME}
   ${QT_LIBRARIES}
 )
 target_include_directories(${LIB_NAME}
-  PUBLIC
-   ${PCL_INCLUDE_DIRS}
-   ${Boost_INCLUDE_DIRS}
-   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+  SYSTEM PUBLIC
+    ${PCL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
-
+target_include_directories(${LIB_NAME}
+  PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+)
 set_target_properties(${LIB_NAME} PROPERTIES CXX_STANDARD 11)
 target_compile_options(${LIB_NAME} PUBLIC ${TVIEWER_OPTIONS})
 target_compile_definitions(${LIB_NAME} PUBLIC ${TVIEWER_DEFINITIONS})
