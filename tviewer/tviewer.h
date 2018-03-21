@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_TVIEWER_H
-#define TVIEWER_TVIEWER_H
+#pragma once
 
 /** \file tviewer.h
   * Main header of the library */
@@ -85,6 +84,4 @@ TViewer is released under a permissive MIT license.
 #include "visualization_objects/point_cloud_with_color_shuffling_object.h"
 
 #include "factory.h"
-
-#endif /* TVIEWER_TVIEWER_H */
 

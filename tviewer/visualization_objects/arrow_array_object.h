@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_ARROW_ARRAY_OBJECT_H
-#define TVIEWER_ARROW_ARRAY_OBJECT_H
+#pragma once
 
 /** \file visualization_objects/arrow_array_object.h
   * Visualization object for array of arrows */
@@ -161,6 +160,4 @@ namespace tviewer
   /// @}
 
 }
-
-#endif /* TVIEWER_ARROW_ARRAY_OBJECT_H */
 

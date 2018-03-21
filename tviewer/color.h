@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_COLOR_H
-#define TVIEWER_COLOR_H
+#pragma once
 
 /** \file color.h
   * Functions to manipulate RGBA colors */
@@ -112,6 +111,4 @@ namespace tviewer
   /// @}
 
 }
-
-#endif /* TVIEWER_COLOR_H */
 

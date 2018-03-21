@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_POLY_DATA_OBJECT_H
-#define TVIEWER_POLY_DATA_OBJECT_H
+#pragma once
 
 /** \file poly_data_object.h
   * Visualization object for polygonal data */
@@ -136,6 +135,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_POLY_DATA_OBJECT_H */
 

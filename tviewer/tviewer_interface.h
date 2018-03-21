@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_TVIEWER_INTERFACE_H
-#define TVIEWER_TVIEWER_INTERFACE_H
+#pragma once
 
 /** \file tviewer_interface.h
   * Public TViewer interface */
@@ -259,6 +258,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_TVIEWER_INTERFACE_H */
 

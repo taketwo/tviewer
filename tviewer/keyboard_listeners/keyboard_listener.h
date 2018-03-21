@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_KEYBOARD_LISTENER_H
-#define TVIEWER_KEYBOARD_LISTENER_H
+#pragma once
 
 /** \file keyboard_listener.h
   * Base class for keyboard listeners */
@@ -95,6 +94,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_KEYBOARD_LISTENER_H */
 

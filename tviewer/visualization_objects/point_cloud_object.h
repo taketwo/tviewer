@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_POINT_CLOUD_OBJECT_H
-#define TVIEWER_POINT_CLOUD_OBJECT_H
+#pragma once
 
 /** \file point_cloud_object.h
   * Visualization object for points */
@@ -184,6 +183,4 @@ namespace tviewer
   /// @}
 
 }
-
-#endif /* TVIEWER_POINT_CLOUD_OBJECT_H */
 

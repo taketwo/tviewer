@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_TVIEWER_DUMMY_H
-#define TVIEWER_TVIEWER_DUMMY_H
+#pragma once
 
 /** \file tviewer_dummy.h
   * Dummy implementation of TViewer interface */
@@ -166,6 +165,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_TVIEWER_DUMMY_H */
 

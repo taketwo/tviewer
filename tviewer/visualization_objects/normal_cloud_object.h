@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_NORMAL_CLOUD_OBJECT_H
-#define TVIEWER_NORMAL_CLOUD_OBJECT_H
+#pragma once
 
 /** \file normal_cloud_object.h
   * Visualization object for points with normals */
@@ -159,6 +158,4 @@ namespace tviewer
   /// @}
 
 }
-
-#endif /* TVIEWER_NORMAL_CLOUD_OBJECT_H */
 

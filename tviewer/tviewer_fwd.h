@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_TVIEWER_FWD_H
-#define TVIEWER_TVIEWER_FWD_H
+#pragma once
 
 /** \file tviewer_fwd.h
   * Forward declarations and typedefs */
@@ -50,6 +49,4 @@ namespace tviewer
   using Color = uint32_t;
 
 }
-
-#endif /* TVIEWER_TVIEWER_FWD_H */
 

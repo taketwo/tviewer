@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_UP_DOWN_COUNTER_H
-#define TVIEWER_UP_DOWN_COUNTER_H
+#pragma once
 
 /** \file up_down_counter.h
   * Up-down counting keyboard listener */
@@ -184,6 +183,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_UP_DOWN_COUNTER_H */
 

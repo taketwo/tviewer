@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_VISUALIZATION_OBJECT_H
-#define TVIEWER_VISUALIZATION_OBJECT_H
+#pragma once
 
 /** \file visualization_object.h
   * Base class for visualization objects */
@@ -218,6 +217,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_VISUALIZATION_OBJECT_H */
 

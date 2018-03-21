@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_FACTORY_H
-#define TVIEWER_FACTORY_H
+#pragma once
 
 /** \file factory.h
   * Factory functions to instantiate TViewer */
@@ -82,6 +81,4 @@ namespace tviewer
   create (int argc, char** argv);
 
 }
-
-#endif /* TVIEWER_FACTORY_H */
 

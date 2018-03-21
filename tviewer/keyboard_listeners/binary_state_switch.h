@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_BINARY_STATE_SWITCH_H
-#define TVIEWER_BINARY_STATE_SWITCH_H
+#pragma once
 
 /** \file binary_state_switch.h
   * Binary state switching keyboard listener */
@@ -172,6 +171,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_BINARY_STATE_SWITCH_H */
 

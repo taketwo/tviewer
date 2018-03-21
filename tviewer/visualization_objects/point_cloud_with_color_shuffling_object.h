@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_POINT_CLOUD_WITH_COLOR_SHUFFLING_OBJECT_H
-#define TVIEWER_POINT_CLOUD_WITH_COLOR_SHUFFLING_OBJECT_H
+#pragma once
 
 /** \file point_cloud_with_color_shuffling_object.h
   * Visualization object for points with color shuffling capability */
@@ -141,6 +140,4 @@ namespace tviewer
   };
 
 }
-
-#endif /* TVIEWER_POINT_CLOUD_WITH_COLOR_SHUFFLING_OBJECT_H */
 

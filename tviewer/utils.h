@@ -20,8 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
-#ifndef TVIEWER_UTILS_H
-#define TVIEWER_UTILS_H
+#pragma once
 
 /** \file utils.h
   * Utility functions */
@@ -54,6 +53,4 @@ namespace tviewer
   matchKeys (const pcl::visualization::KeyboardEvent& key_event, const std::string& key);
 
 }
-
-#endif /* TVIEWER_UTILS_H */
 
