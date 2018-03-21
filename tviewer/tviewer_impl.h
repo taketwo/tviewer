@@ -50,86 +50,89 @@ namespace tviewer
       /// Disabled assignment operator.
       TViewerImpl& operator= (const TViewerImpl&) = delete;
 
-      virtual ~TViewerImpl ();
+      ~TViewerImpl () override;
 
-      virtual void
+      void
       run () override;
 
-      virtual void
+      void
       sleep (size_t milliseconds) override;
 
-      virtual void
+      void
       add (VisualizationObjectPtr object, bool show = false, bool update = false) override;
 
-      virtual void
+      void
       remove (const std::string& object_name) override;
 
-      virtual void
+      void
       show (const std::string& object_name) override;
 
-      virtual void
+      void
       show () override;
 
-      virtual void
+      void
       hide (const std::string& object_name) override;
 
-      virtual void
+      void
       hide () override;
 
-      virtual void
+      void
       update (const std::string& object_name) override;
 
-      virtual void
+      void
       update () override;
 
-      virtual void
+      void
       addListener (KeyboardListenerPtr listener,
                    const std::vector<std::string>& dependent_objects = {}) override;
 
-      virtual void
+      void
       removeListener (const std::string& listener_name) override;
 
-      virtual void
+      void
       saveCameraParameters (const std::string& filename) override;
 
-      virtual void
+      void
       loadCameraParameters (const std::string& filename) override;
 
-      virtual bool
+      bool
       askYesNo (const std::string& question, bool no_with_any_key = true) override;
 
-      virtual bool
+      bool
       waitKeyPressed () override;
 
-      virtual bool
+      bool
       waitKeyPressed (std::string& key) override;
 
-      virtual bool
+      bool
       waitKeyPressed (const std::vector<std::string>& keys) override;
 
-      virtual bool
+      bool
       waitKeyPressed (std::string& key, const std::vector<std::string>& keys) override;
 
-      virtual bool
+      bool
       waitPointSelected (size_t& point_index, float& x, float& y, float& z) override;
 
-      virtual bool
+      bool
       waitPointSelected (size_t& point_index) override;
 
-      virtual bool
+      bool
       waitPointSelected (Color& point_color) override;
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
-                                       std::vector<pcl::PointIndices>& indices,
-                                       bool skip_duplicates) override;
+      bool
+      waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
+                          std::vector<pcl::PointIndices>& indices,
+                          bool skip_duplicates) override;
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
-                                       bool skip_duplicates) override;
+      bool
+      waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud,
+                          bool skip_duplicates) override;
 
-      virtual bool waitPointsSelected (std::vector<pcl::PointIndices>& indices,
-                                       bool skip_duplicates) override;
+      bool
+      waitPointsSelected (std::vector<pcl::PointIndices>& indices,
+                          bool skip_duplicates) override;
 
-      virtual void
+      void
       setBackgroundColor (Color color) override;
 
     protected:
@@ -164,7 +167,7 @@ namespace tviewer
 
       std::map<std::string, std::set<std::string>> listener_dependents_;
 
-      bool mode_waiting_user_input_;
+      bool mode_waiting_user_input_ = false;
 
       // Names of the objects that should be shown/hidden when added, this is
       // supposed to be set in the factory create() function.

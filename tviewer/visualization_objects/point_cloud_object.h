@@ -91,24 +91,24 @@ namespace tviewer
       {
       }
 
-      virtual bool
+      bool
       at (size_t index, float& x, float& y, float& z) const override;
 
     protected:
 
-      virtual bool
+      bool
       at_ (size_t index, boost::any& item) const override;
 
-      virtual void
+      void
       addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       updateData () override;
 
       /// Data for visualization.

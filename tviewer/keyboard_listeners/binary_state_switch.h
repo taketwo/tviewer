@@ -76,10 +76,10 @@ namespace tviewer
       /// Disabled assignment operator.
       BinaryStateSwitch& operator= (const BinaryStateSwitch&) = delete;
 
-      virtual bool
+      bool
       execute (const pcl::visualization::KeyboardEvent& key_event) override;
 
-      virtual void
+      void
       getInfo (std::string& diagram,
                std::string& description,
                std::string& keys,

@@ -59,7 +59,7 @@ namespace tviewer
   {
     try
     {
-      return std::stoul (color, 0, 0);
+      return std::stoul (color, nullptr, 0);
     }
     catch (std::invalid_argument& e)
     {
@@ -98,9 +98,9 @@ namespace tviewer
     static std::random_device rnd;
     static std::mt19937 gen (rnd ());
     static std::uniform_int_distribution<> dist(0, 255);
-    uint8_t r = static_cast<uint8_t> ((dist (gen) % 256));
-    uint8_t g = static_cast<uint8_t> ((dist (gen) % 256));
-    uint8_t b = static_cast<uint8_t> ((dist (gen) % 256));
+    auto r = static_cast<uint8_t> ((dist (gen) % 256));
+    auto g = static_cast<uint8_t> ((dist (gen) % 256));
+    auto b = static_cast<uint8_t> ((dist (gen) % 256));
     return getColorFromRGB (r, g, b);
   }
 

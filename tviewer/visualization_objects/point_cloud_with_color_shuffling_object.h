@@ -73,15 +73,15 @@ namespace tviewer
         generateColorMap ();
       }
 
-      virtual bool
+      bool
       execute (const pcl::visualization::KeyboardEvent& key_event) override;
 
     protected:
 
-      virtual bool
+      bool
       at_ (size_t index, boost::any& item) const override;
 
-      virtual void
+      void
       updateData () override;
 
       using PointCloudObject<pcl::PointXYZRGBA>::data_;

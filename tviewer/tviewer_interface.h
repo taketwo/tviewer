@@ -47,8 +47,7 @@ namespace tviewer
       /// Shared pointer to an object that implements TViewer interface.
       using Ptr = std::shared_ptr<TViewerInterface>;
 
-      virtual ~TViewerInterface ()
-      { }
+      virtual ~TViewerInterface () = default;
 
       /** Run internal loop updating the screen and waiting for user input. */
       virtual void

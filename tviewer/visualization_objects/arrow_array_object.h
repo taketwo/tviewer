@@ -85,13 +85,13 @@ namespace tviewer
 
     protected:
 
-      virtual void
+      void
       addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       updateData () override;
 
     private:

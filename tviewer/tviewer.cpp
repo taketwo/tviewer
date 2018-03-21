@@ -37,7 +37,7 @@
 
 tviewer::TViewerImpl::TViewerImpl (bool create_interactor)
 : viewer_ (new pcl::visualization::PCLVisualizer ("T Viewer", create_interactor))
-, mode_waiting_user_input_ (false)
+ 
 {
   viewer_->registerKeyboardCallback (boost::bind (&TViewerImpl::keyboardEventCallback, this, _1));
   viewer_->registerPointPickingCallback (boost::bind (&TViewerImpl::pickPointEventCallback, this, _1));
@@ -541,10 +541,10 @@ tviewer::TViewerImpl::printHelp () const
   if (objects_.size())
   {
     std::cout << fmt_header % "Visualization objects";
-    for (size_t i = 0; i < objects_.size (); ++i)
+    for (const auto & object : objects_)
     {
-      std::cout << fmt_info % (objects_[i]->visible_ ? "  ☒  " : "  ☐  ") % objects_[i]->description_;
-      printWithHighlight (objects_[i]->key_, isalpha);
+      std::cout << fmt_info % (object->visible_ ? "  ☒  " : "  ☐  ") % object->description_;
+      printWithHighlight (object->key_, isalpha);
       std::cout << std::endl;
     }
     std::cout << fmt_footer;
@@ -554,10 +554,10 @@ tviewer::TViewerImpl::printHelp () const
   if (listeners_.size())
   {
     std::cout << fmt_header % "Keyboard listeners";
-    for (size_t i = 0; i < listeners_.size (); ++i)
+    for (const auto & listener : listeners_)
     {
       std::string diagram, description, keys, extra;
-      listeners_[i]->getInfo (diagram, description, keys, extra);
+      listener->getInfo (diagram, description, keys, extra);
       std::cout << fmt_info % diagram % description;
       printWithHighlight (keys, isalpha);
       std::cout << std::endl;
@@ -574,12 +574,12 @@ tviewer::TViewerImpl::printHelp () const
 void
 tviewer::TViewerImpl::printWithHighlight (const std::string& str, std::function<bool (char)> highlight)
 {
-  for (size_t i = 0; i < str.size (); ++i)
+  for (char i : str)
   {
-    if (highlight (str[i]))
+    if (highlight (i))
       pcl::console::change_text_color (stdout, pcl::console::TT_RESET, pcl::console::TT_MAGENTA);
-    std::cout << str[i];
-    if (highlight (str[i]))
+    std::cout << i;
+    if (highlight (i))
       pcl::console::reset_text_color (stdout);
   }
 }

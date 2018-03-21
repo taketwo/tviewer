@@ -45,119 +45,116 @@ namespace tviewer
       /// Disabled assignment operator.
       TViewerDummy& operator= (const TViewerDummy&) = delete;
 
-      virtual ~TViewerDummy ()
-      { }
+      ~TViewerDummy () override = default;
 
-      virtual void
+      void
       run () override
       { }
 
-      virtual void
+      void
       sleep (size_t) override
       { }
 
-      virtual void
+      void
       add (VisualizationObjectPtr, bool = false, bool = false) override
       { }
 
-      virtual void
+      void
       remove (const std::string&) override
       { }
 
-      virtual void
+      void
       show (const std::string&) override
       { }
 
-      virtual void
+      void
       show () override
       { }
 
-      virtual void
+      void
       hide (const std::string&) override
       { }
 
-      virtual void
+      void
       hide () override
       { }
 
-      virtual void
+      void
       update (const std::string&) override
       { }
 
-      virtual void
+      void
       update () override
       { }
 
-      virtual void
+      void
       addListener (KeyboardListenerPtr,
                    const std::vector<std::string>& = {}) override
       { }
 
-      virtual void
+      void
       removeListener (const std::string&) override
       { }
 
-      virtual void
+      void
       saveCameraParameters (const std::string&) override
       { }
 
-      virtual void
+      void
       loadCameraParameters (const std::string&) override
       { }
 
-      virtual bool
+      bool
       askYesNo (const std::string&, bool = true) override
       { return false; }
 
-      virtual bool
+      bool
       waitKeyPressed () override
       { return false; }
 
-      virtual bool
+      bool
       waitKeyPressed (std::string&) override
       { return false; }
 
-      virtual bool
+      bool
       waitKeyPressed (const std::vector<std::string>&) override
       { return false; }
 
-      virtual bool
+      bool
       waitKeyPressed (std::string&, const std::vector<std::string>&) override
       { return false; }
 
-      virtual bool
+      bool
       waitPointSelected (size_t&, float&, float&, float&) override
       { return false; }
 
-      virtual bool
+      bool
       waitPointSelected (size_t&) override
       { return false; }
 
-      virtual bool
+      bool
       waitPointSelected (Color&) override
       { return false; }
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&,
-                                       std::vector<pcl::PointIndices>&,
-                                       bool) override
+      bool
+      waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&, std::vector<pcl::PointIndices>&, bool) override
       { return false; }
 
-      virtual bool waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&,
-                                       bool) override
+      bool
+      waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>&, bool) override
       { return false; }
 
-      virtual bool waitPointsSelected (std::vector<pcl::PointIndices>&,
-                                       bool) override
+      bool
+      waitPointsSelected (std::vector<pcl::PointIndices>&, bool) override
       { return false; }
 
-      virtual void
+      void
       setBackgroundColor (Color) override
       { }
 
     private:
 
-      TViewerDummy ()
-      { }
+      TViewerDummy () = default;
 
       friend TViewerPtr create (bool);
       friend TViewerPtr create (int argc, char** argv);

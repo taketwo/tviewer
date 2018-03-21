@@ -76,19 +76,19 @@ namespace tviewer
 
     protected:
 
-      virtual void
+      void
       addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override
       {
         v.addPointCloudNormals<pcl::PointNormal> (data_, level_, scale_, name_);
       }
 
-      virtual void
+      void
       removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override
       {
         v.removePointCloud (name_);
       }
 
-      virtual void
+      void
       updateData () override
       {
         data_ = retrieve_ ();

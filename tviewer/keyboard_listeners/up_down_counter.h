@@ -83,10 +83,10 @@ namespace tviewer
       /// Disabled assignment operator.
       UpDownCounter<T>& operator= (const UpDownCounter<T>&) = delete;
 
-      virtual bool
+      bool
       execute (const pcl::visualization::KeyboardEvent& key_event) override;
 
-      virtual void
+      void
       getInfo (std::string& diagram,
                std::string& description,
                std::string& keys,

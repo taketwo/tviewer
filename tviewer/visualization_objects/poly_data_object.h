@@ -72,16 +72,16 @@ namespace tviewer
 
     protected:
 
-      virtual void
+      void
       addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
 
-      virtual void
+      void
       removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v) override
       {
         v.removeShape (name_);
       }
 
-      virtual void
+      void
       updateData () override
       {
         data_ = retrieve_ ();
