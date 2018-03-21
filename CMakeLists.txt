@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1.3)
 
 set(LIB_NAME tviewer)
 project("lib${LIB_NAME}")
@@ -6,23 +6,24 @@ project("lib${LIB_NAME}")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_CXX_STANDARD 11)
+
 # Set build type to Release if not specified by user
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "-- No build type specified; defaulting to CMAKE_BUILD_TYPE=Release")
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel" FORCE)
 endif()
 
-# Compilation
-add_definitions(-std=c++11)
+# High level of warnings
 add_definitions(-Wall -Wextra)
-# Silence warnings from vtk includes
-add_definitions(-Wno-extra-semi)
+# But silence annoying noise from VTK
 add_definitions(-Wno-comment)
+
 # Boost Preprocessor library is very conservative in enabling variadics support.
 # In fact, if a compiler implements c++11, then we can be sure that variadics
 # are supported as well. This define enables preprocessor macros that require
 # variadics support (needed by 'named_parameters_def.h').
-add_definitions(-DBOOST_PP_VARIADICS=1)
+list(APPEND TVIEWER_DEFINITIONS -DBOOST_PP_VARIADICS=1)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
@@ -39,9 +40,12 @@ option(BUILD_EXAMPLES "Build tviewer examples." OFF)
 # Dependencies
 find_package(Boost REQUIRED)
 find_package(PCL 1.8 REQUIRED COMPONENTS common visualization)
-include_directories(${PCL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
+
+# Build a list of options for TViewer by cleaning up PCL_DEFINITIONS
+foreach(_def ${PCL_DEFINITIONS})
+  string(REPLACE " " ";" _def_filtered ${_def})
+  list(APPEND TVIEWER_OPTIONS ${_def_filtered})
+endforeach()
 
 if(WITH_QT)
   if(VTK_VERSION VERSION_LESS "6.0")
@@ -65,7 +69,7 @@ if(WITH_QT)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   # Instruct CMake to run moc automatically when needed.
   set(CMAKE_AUTOMOC ON)
-  add_definitions(${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
+  list(APPEND TVIEWER_DEFINITIONS ${QT_DEFINITIONS} "-DQT_NO_KEYWORDS")
   qt_wrap_ui(TVIEWER_WIDGET_FORMS_HEADERS
     tviewer/tviewer_widget/tviewer_widget.ui
   )
@@ -96,6 +100,16 @@ target_link_libraries(${LIB_NAME}
   ${VTK_LIBRARIES}
   ${QT_LIBRARIES}
 )
+target_include_directories(${LIB_NAME}
+  PUBLIC
+   ${PCL_INCLUDE_DIRS}
+   ${Boost_INCLUDE_DIRS}
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+)
+
+set_target_properties(${LIB_NAME} PROPERTIES CXX_STANDARD 11)
+target_compile_options(${LIB_NAME} PUBLIC ${TVIEWER_OPTIONS})
+target_compile_definitions(${LIB_NAME} PUBLIC ${TVIEWER_DEFINITIONS})
 
 # Documentation
 if(BUILD_DOC)
