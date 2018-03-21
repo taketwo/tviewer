@@ -22,3 +22,7 @@ add_executable(example_keyboard_listeners
 target_link_libraries(example_keyboard_listeners
   ${LIB_NAME}
 )
+
+if (WITH_QT)
+  add_subdirectory(qt)
+endif ()
