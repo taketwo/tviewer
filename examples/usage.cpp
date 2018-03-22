@@ -78,13 +78,14 @@ int main (int argc, char** argv)
     })
   );
 
-  ArrowsPtr arrows (new Arrows);
-  arrows->push_back ({ Eigen::Vector3f (1, 1, 1), Eigen::Vector3f (2, 2, 1), 0xFF0000 });
-  arrows->push_back ({ Eigen::Vector3f (0, 1, 0), Eigen::Vector3f (0, 2, 0), 0x00FFFF });
+  PrimitivesPtr primitives (new Primitives);
+  primitives->push_back (Arrow { Eigen::Vector3f (1, 1, 1), Eigen::Vector3f (2, 2, 1), 0xFF0000 });
+  primitives->push_back (Sphere { Eigen::Vector3f (1, 1, 1), 1.3f, 0xAF7700 });
   viewer->add
-  ( CreateArrowArrayObject ("arrows", "a")
-  . description            ("Arrows")
-  . data                   (arrows)
+  ( CreatePrimitiveArrayObject ("primitives", "p")
+  . description                ("Primitives")
+  . data                       (primitives)
+  . flatShading                ()
   );
 
   viewer->update ();

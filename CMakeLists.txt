@@ -87,12 +87,12 @@ add_library(${LIB_NAME}
   tviewer/factory.cpp
   tviewer/keyboard_listeners/up_down_counter.cpp
   tviewer/keyboard_listeners/binary_state_switch.cpp
-  tviewer/visualization_objects/poly_data_object.cpp
-  tviewer/visualization_objects/arrow_array_object.cpp
-  tviewer/visualization_objects/point_cloud_object.cpp
   tviewer/visualization_objects/normal_cloud_object.cpp
-  tviewer/visualization_objects/visualization_object.cpp
+  tviewer/visualization_objects/point_cloud_object.cpp
   tviewer/visualization_objects/point_cloud_with_color_shuffling_object.cpp
+  tviewer/visualization_objects/poly_data_object.cpp
+  tviewer/visualization_objects/primitive_array_object.cpp
+  tviewer/visualization_objects/visualization_object.cpp
   ${TVIEWER_WIDGET_SOURCES}
 )
 target_link_libraries(${LIB_NAME}

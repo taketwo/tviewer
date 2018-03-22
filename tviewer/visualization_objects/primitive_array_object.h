@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Sergey Alexandrov
+ * Copyright (c) 2018 Sergey Alexandrov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -22,8 +22,10 @@
 
 #pragma once
 
-/** \file visualization_objects/arrow_array_object.h
-  * Visualization object for array of arrows */
+/** \file visualization_objects/primitive_array_object.h
+  * Visualization object that manages an array of primitive shapes (spheres, arrows, etc.) */
+
+#include <boost/variant.hpp>
 
 #include "visualization_object.h"
 
@@ -33,9 +35,7 @@ namespace tviewer
   /// \addtogroup public
   /// @{
 
-  /** Structure that represents a colored directed arrow.
-    *
-    * A set of arrows can be visualized using ArrowArrayObject. */
+  /** Structure that represents a colored directed arrow. */
   struct Arrow
   {
     Eigen::Vector3f source;  ///< Source point of the arrow.
@@ -43,43 +43,56 @@ namespace tviewer
     Color color;             ///< Color of the arrow.
   };
 
-  /// Array of arrows.
-  using Arrows = std::vector<Arrow>;
+  /** Structure that represents a colored sphere. */
+  struct Sphere
+  {
+    Eigen::Vector3f center;  ///< Center of the sphere.
+    float radius;            ///< Radius of the sphere.
+    Color color;             ///< Color of the sphere.
+  };
 
-  /// Shared pointer to an array of arrows.
-  using ArrowsPtr = std::shared_ptr<Arrows>;
+  /// A primitive shape.
+  using Primitive = boost::variant<Arrow, Sphere>;
 
-  /** Visualization object that displays an array of arrows. */
-  class ArrowArrayObject : public VisualizationObject
+  /// Array of primitive shapes.
+  using Primitives = std::vector<Primitive>;
+
+  /// Shared pointer to an array of primitive shapes.
+  using PrimitivesPtr = std::shared_ptr<Primitives>;
+
+  /** Visualization object that displays an array of primitive shapes. */
+  class PrimitiveArrayObject : public VisualizationObject
   {
 
     public:
 
-      /// Function that retrieves data for visualization.
-      using RetrieveFunction = std::function<ArrowsPtr ()>;
+      using Data = Primitives;
+      using DataPtr = PrimitivesPtr;
 
-      /** Construct arrow array visualization object.
+      /// Function that retrieves data for visualization.
+      using RetrieveFunction = std::function<DataPtr ()>;
+
+      /** Construct primitive array visualization object.
         *
         * \param[in] name unique name (identifier) for the object
         * \param[in] description short description of the object that will be
         *            displayed in help
         * \param[in] key key used to show/hide the object
-        * \param[in] data array of arrows to display
-        * \param[in] retrieve function that returns an array of arrows that is
-        *            to be displayed
-        * \param[in] invert_direction if set to \c true the arrows will be
-        *            pointing in the opposite direction (i.e. from \c target
-        *            to \c source) */
-      ArrowArrayObject (const std::string& name,
-                        const std::string& description,
-                        const std::string& key,
-                        const ArrowsPtr& data,
-                        const RetrieveFunction& retrieve,
-                        bool invert_direction)
+        * \param[in] data array of primitive shapes to display
+        * \param[in] retrieve function that returns an array of primitive shapes
+        *            that is to be displayed
+        * \param[in] flat_shading if set to \c true flat shading will be used
+        *            when rendering primitives, otherwise Phong shading. */
+      PrimitiveArrayObject (const std::string& name,
+                            const std::string& description,
+                            const std::string& key,
+                            const DataPtr& data,
+                            const RetrieveFunction& retrieve,
+                            bool flat_shading)
       : VisualizationObject (name, description, key)
       , data_ (data)
       , retrieve_ (retrieve)
-      , invert_direction_ (invert_direction)
+      , flat_shading_ (flat_shading)
       {
       }
 
@@ -96,19 +109,17 @@ namespace tviewer
 
     private:
 
-      inline std::string
-      createId (size_t i) const;
-
-      ArrowsPtr data_;
+      DataPtr data_;
       RetrieveFunction retrieve_;
-      bool invert_direction_;
-      std::vector<std::string> arrows_in_visualizer_;
+      std::vector<std::string> objects_in_visualizer_;
+
+      bool flat_shading_;
 
   };
 
   /** Helper class that provides a fluent interface to simplify instantiation of
-    * ArrowArrayObject. */
-  class CreateArrowArrayObject
+    * PrimitiveArrayObject. */
+  class CreatePrimitiveArrayObject
   {
 
     private:
@@ -116,43 +127,43 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      using Data = Arrows;
-      using DataPtr = ArrowsPtr;
+      using Data = Primitives;
+      using DataPtr = PrimitivesPtr;
 
 #include "../named_parameters/named_parameters_def.h"
-#define OWNER_TYPE CreateArrowArrayObject
+#define OWNER_TYPE CreatePrimitiveArrayObject
 
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
-      NAMED_PARAMETER (ArrowArrayObject::RetrieveFunction, onUpdate);
-      NAMED_PARAMETER (bool, invertDirection, false, true);
+      NAMED_PARAMETER (PrimitiveArrayObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (bool, flatShading, false, true);
 
 #include "../named_parameters/named_parameters_undef.h"
 
     public:
 
       /** Constructor that takes required configuration parameters. */
-      CreateArrowArrayObject (const std::string& name, const std::string& key)
+      CreatePrimitiveArrayObject (const std::string& name, const std::string& key)
       : name_ (name)
       , key_ (key)
       {
       }
 
-      /** Cast operator to ArrowArrayObject::Ptr.
+      /** Cast operator to PrimitiveArrayObject::Ptr.
         *
-        * This function performs instantiation of an ArrowArrayObject. It is
+        * This function performs instantiation of an PrimitiveArrayObject. It is
         * supposed to be called after configuring the object using the fluent
         * interface functions. */
-      operator std::shared_ptr<ArrowArrayObject> ();
+      operator std::shared_ptr<PrimitiveArrayObject> ();
 
       /** Cast operator to VisualizationObject::Ptr.
         *
-        * This function performs instantiation of an ArrowArrayObject. It is
+        * This function performs instantiation of an PrimitiveArrayObject. It is
         * supposed to be called after configuring the object using the fluent
         * interface functions. */
       inline operator std::shared_ptr<VisualizationObject> ()
       {
-        return this->operator std::shared_ptr<ArrowArrayObject> ();
+        return this->operator std::shared_ptr<PrimitiveArrayObject> ();
       }
 
   };

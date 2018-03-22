@@ -78,9 +78,9 @@ TViewer is released under a permissive MIT license.
 
 #include "visualization_objects/visualization_object.h"
 #include "visualization_objects/poly_data_object.h"
-#include "visualization_objects/arrow_array_object.h"
 #include "visualization_objects/point_cloud_object.h"
 #include "visualization_objects/normal_cloud_object.h"
+#include "visualization_objects/primitive_array_object.h"
 #include "visualization_objects/point_cloud_with_color_shuffling_object.h"
 
 #include "factory.h"
