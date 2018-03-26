@@ -61,11 +61,11 @@ int main (int argc, char** argv)
   );
 
   viewer->add
-  ( CreateNormalCloudObject ("normals", "n")
-  . description             ("Normals cloud")
-  . level                   (1)
-  . scale                   (0.05)
-  . onUpdate                ([&]
+  ( CreateNormalCloudObject<pcl::PointNormal> ("normals", "n")
+  . description                               ("Normals cloud")
+  . level                                     (1)
+  . scale                                     (0.05)
+  . onUpdate                                  ([&]
     {
       pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
       pcl::PointCloud<pcl::PointNormal>::Ptr point_normals (new pcl::PointCloud<pcl::PointNormal>);

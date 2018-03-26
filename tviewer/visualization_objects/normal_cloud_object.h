@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Sergey Alexandrov
+ * Copyright (c) 2014, 2018 Sergey Alexandrov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -34,16 +34,17 @@ namespace tviewer
   /// @{
 
   /** Visualization object that displays a cloud of points with normals. */
+  template <typename PointT>
   class NormalCloudObject : public VisualizationObject
   {
 
     public:
 
       /// Cloud of points with normals.
-      using NormalCloud = pcl::PointCloud<pcl::PointNormal>;
+      using NormalCloud = pcl::PointCloud<PointT>;
 
       /// Shared pointer to a const cloud of points with normals.
-      using NormalCloudConstPtr = NormalCloud::ConstPtr;
+      using NormalCloudConstPtr = typename NormalCloud::ConstPtr;
 
       /// Function that retrieves data for visualization.
       using RetrieveFunction = std::function<NormalCloudConstPtr ()>;
@@ -96,6 +97,7 @@ namespace tviewer
 
   /** Helper class that provides a fluent interface to simplify instantiation of
     * NormalCloudObject. */
+  template <typename T>
   class CreateNormalCloudObject
   {
 
@@ -104,15 +106,15 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      using Data = NormalCloudObject::NormalCloud;
-      using DataPtr = NormalCloudObject::NormalCloudConstPtr;
+      using Data = typename NormalCloudObject<T>::NormalCloud;
+      using DataPtr = typename NormalCloudObject<T>::NormalCloudConstPtr;
 
 #include "../named_parameters/named_parameters_def.h"
-#define OWNER_TYPE CreateNormalCloudObject
+#define OWNER_TYPE CreateNormalCloudObject<T>
 
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
-      NAMED_PARAMETER (NormalCloudObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (typename NormalCloudObject<T>::RetrieveFunction, onUpdate);
       NAMED_PARAMETER (int, level, 100);
       NAMED_PARAMETER (float, scale, 0.02);
 
@@ -132,7 +134,7 @@ namespace tviewer
         * This function performs instantiation of a NormalCloudObject. It is
         * supposed to be called after configuring the object using the fluent
         * interface functions. */
-      operator std::shared_ptr<NormalCloudObject> ();
+      operator std::shared_ptr<NormalCloudObject<T>> ();
 
       /** Cast operator to VisualizationObject::Ptr.
         *
@@ -141,7 +143,7 @@ namespace tviewer
         * interface functions. */
       inline operator std::shared_ptr<VisualizationObject> ()
       {
-        return this->operator std::shared_ptr<NormalCloudObject> ();
+        return this->operator std::shared_ptr<NormalCloudObject<T>> ();
       }
 
   };

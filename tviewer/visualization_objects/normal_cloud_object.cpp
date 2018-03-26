@@ -22,37 +22,44 @@
 
 #include "normal_cloud_object.h"
 
-void
-tviewer::NormalCloudObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
+template <typename PointT> void
+tviewer::NormalCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  v.addPointCloudNormals<pcl::PointNormal> (data_, level_, scale_, name_);
+  v.addPointCloudNormals<PointT> (data_, level_, scale_, name_);
 }
 
-void
-tviewer::NormalCloudObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
+template <typename PointT> void
+tviewer::NormalCloudObject<PointT>::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   v.removePointCloud (name_);
 }
 
-void
-tviewer::NormalCloudObject::updateData ()
+template <typename PointT> void
+tviewer::NormalCloudObject<PointT>::updateData ()
 {
   data_ = retrieve_ ();
 }
 
-tviewer::CreateNormalCloudObject::operator std::shared_ptr<NormalCloudObject> ()
+template <typename T>
+tviewer::CreateNormalCloudObject<T>::operator std::shared_ptr<NormalCloudObject<T>> ()
 {
   // Need to turn data_ into a local variable, otherwise the lambda does not
   // seem to capture it by value properly.
   auto d = *data_;
   auto l = [=] { return d; };
 
-  return std::make_shared<NormalCloudObject> (name_,
-                                              description_ ? *description_ : name_,
-                                              key_,
-                                              *data_,
-                                              onUpdate_ ? *onUpdate_ : l,
-                                              *level_,
-                                              *scale_);
+  return std::make_shared<NormalCloudObject<T>> (name_,
+                                                 description_ ? *description_ : name_,
+                                                 key_,
+                                                 *data_,
+                                                 onUpdate_ ? *onUpdate_ : l,
+                                                 *level_,
+                                                 *scale_);
 }
+
+template class tviewer::NormalCloudObject<pcl::PointNormal>;
+template class tviewer::NormalCloudObject<pcl::PointXYZRGBNormal>;
+
+template class tviewer::CreateNormalCloudObject<pcl::PointNormal>;
+template class tviewer::CreateNormalCloudObject<pcl::PointXYZRGBNormal>;
 
