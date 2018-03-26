@@ -66,6 +66,13 @@ namespace detail
         qvtk_widget_->update ();
       }
 
+      virtual void
+      update () override
+      {
+        TViewerImpl::update ();
+        qvtk_widget_->update ();
+      }
+
       void
       setPickPointCallback (PickPointCallback callback)
       {
@@ -180,6 +187,12 @@ void
 TViewerWidget::update (const std::string& object_name)
 {
   tviewer_->update (object_name);
+}
+
+void
+TViewerWidget::update ()
+{
+  tviewer_->update ();
 }
 
 void

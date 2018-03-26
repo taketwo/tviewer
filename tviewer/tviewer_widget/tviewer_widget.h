@@ -73,6 +73,10 @@ class TViewerWidget : public QVTKWidget
     void
     update (const std::string& object_name);
 
+    /** Update all registered visualization objects. */
+    void
+    update ();
+
     /** Show a given visualization object. */
     void
     show (const std::string& object_name);
