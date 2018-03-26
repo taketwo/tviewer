@@ -22,6 +22,24 @@
 
 #include "normal_cloud_object.h"
 
+void
+tviewer::NormalCloudObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
+{
+  v.addPointCloudNormals<pcl::PointNormal> (data_, level_, scale_, name_);
+}
+
+void
+tviewer::NormalCloudObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
+{
+  v.removePointCloud (name_);
+}
+
+void
+tviewer::NormalCloudObject::updateData ()
+{
+  data_ = retrieve_ ();
+}
+
 tviewer::CreateNormalCloudObject::operator std::shared_ptr<NormalCloudObject> ()
 {
   // Need to turn data_ into a local variable, otherwise the lambda does not
