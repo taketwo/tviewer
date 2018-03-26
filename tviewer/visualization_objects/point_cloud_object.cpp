@@ -50,7 +50,7 @@ tviewer::PointCloudObject<PointT>::at_ (size_t index, boost::any& item) const
 template <typename PointT> void
 tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  v.addPointCloud (data_, name_);
+  v.addPointCloud<PointT> (data_, name_);
   v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
   v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, visibility_, name_);
   if (use_fixed_color_ != 0)
@@ -70,7 +70,7 @@ tviewer::PointCloudObject<PointT>::removeDataFromVisualizer (pcl::visualization:
 template <typename PointT> void
 tviewer::PointCloudObject<PointT>::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  v.updatePointCloud (data_, name_);
+  v.updatePointCloud<PointT> (data_, name_);
 }
 
 template <typename PointT> void
@@ -101,11 +101,13 @@ tviewer::CreatePointCloudObject<T>::operator std::shared_ptr<PointCloudObject<T>
 
 template class tviewer::PointCloudObject<pcl::PointXYZ>;
 template class tviewer::PointCloudObject<pcl::PointXYZL>;
+template class tviewer::PointCloudObject<pcl::PointNormal>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGB>;
 template class tviewer::PointCloudObject<pcl::PointXYZRGBA>;
 
 template class tviewer::CreatePointCloudObject<pcl::PointXYZ>;
 template class tviewer::CreatePointCloudObject<pcl::PointXYZL>;
+template class tviewer::CreatePointCloudObject<pcl::PointNormal>;
 template class tviewer::CreatePointCloudObject<pcl::PointXYZRGB>;
 template class tviewer::CreatePointCloudObject<pcl::PointXYZRGBA>;
 
