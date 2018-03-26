@@ -130,7 +130,11 @@ tviewer::TViewerImpl::update (const std::string& object_name)
 {
   for (const auto& object : objects_)
     if (object->name_ == object_name)
+    {
       object->update ();
+      return;
+    }
+  assert (false); // TODO: throw exception
 }
 
 void
