@@ -16,7 +16,7 @@ using namespace tviewer;
 QtExample::QtExample (QWidget* parent)
 : QMainWindow (parent)
 , ui_ (new Ui::QtExample)
-, dataset_ (new pcl::PointCloud<pcl::PointXYZ>)
+, dataset_ (new pcl::PointCloud<pcl::PointNormal>)
 {
   ui_->setupUi (this);
 
@@ -28,12 +28,22 @@ QtExample::QtExample (QWidget* parent)
   generateDataset ();
 
   ui_->viewer->add
-  ( CreatePointCloudObject<pcl::PointXYZ> ("dataset", "d")
-  . description                           ("Generated dataset")
-  . data                                  (dataset_)
-  . pointSize                             (2)
-  . visibility                            (1.0)
-  . color                                 (generateRandomColor ())
+  ( CreatePointCloudObject<pcl::PointNormal> ("dataset", "d")
+  . description                              ("Generated dataset")
+  . data                                     (dataset_)
+  . pointSize                                (2)
+  . visibility                               (1.0)
+  . color                                    (generateRandomColor ())
+  , true
+  );
+
+  ui_->viewer->add
+  ( CreateNormalCloudObject<pcl::PointNormal> ("normals", "n")
+  . description                               ("Generated dataset normals")
+  . data                                      (dataset_)
+  . level                                     (5)
+  . scale                                     (2.5f)
+  , false
   , true
   );
 
@@ -65,30 +75,29 @@ QtExample::onDataGenerationSettingsChanged ()
 {
   generateDataset ();
   inliers_.clear ();
-  ui_->viewer->update ("dataset");
-  ui_->viewer->update ("inliers");
+  ui_->viewer->update ();
 }
 
 void
 QtExample::onButtonFitClicked ()
 {
-  pcl::SampleConsensusModel<pcl::PointXYZ>::Ptr model;
+  pcl::SampleConsensusModel<pcl::PointNormal>::Ptr model;
 
   if (ui_->radio_line->isChecked ())
   {
-    model.reset (new pcl::SampleConsensusModelLine<pcl::PointXYZ> (dataset_, true));
+    model.reset (new pcl::SampleConsensusModelLine<pcl::PointNormal> (dataset_, true));
   }
   else if (ui_->radio_plane->isChecked ())
   {
-    model.reset (new pcl::SampleConsensusModelPlane<pcl::PointXYZ> (dataset_, true));
+    model.reset (new pcl::SampleConsensusModelPlane<pcl::PointNormal> (dataset_, true));
   }
   else if (ui_->radio_sphere->isChecked ())
   {
-    model.reset (new pcl::SampleConsensusModelSphere<pcl::PointXYZ> (dataset_, true));
-    model->setRadiusLimits(0, 1000);
+    model.reset (new pcl::SampleConsensusModelSphere<pcl::PointNormal> (dataset_, true));
+    model->setRadiusLimits(1, 1000);
   }
 
-  pcl::RandomSampleConsensus<pcl::PointXYZ> ransac (model);
+  pcl::RandomSampleConsensus<pcl::PointNormal> ransac (model);
   ransac.setDistanceThreshold (ui_->spinbox_distance_threshold->value ());
   ransac.setProbability (ui_->spinbox_probability->value ());
   ransac.setMaxIterations (ui_->spinbox_max_iterations->value ());
@@ -117,18 +126,26 @@ QtExample::generateDataset ()
 
   float size = 100.0;
 
-  pcl::PointXYZ center (0, 0, 0);
-  auto push_point = [&](const Eigen::Vector3f& p)
+  Eigen::Vector3f center (0, 0, 0);
+  auto push_point = [&](const pcl::PointNormal& p)
   {
-    dataset_->push_back (center);
-    dataset_->back ().getVector3fMap () += p;
+    dataset_->push_back (p);
+    dataset_->back ().getVector3fMap () += center;
   };
 
   std::uniform_real_distribution<> o_dist (-size / 2, size / 2);
-  auto generate_outlier = [&](){ return Eigen::Vector3f (o_dist (gen), o_dist (gen), o_dist (gen)); };
+  auto generate_outlier = [&]()
+  {
+    pcl::PointNormal p;
+    p.getVector3fMap () = Eigen::Vector3f (o_dist (gen), o_dist (gen), o_dist (gen));
+    p.getNormalVector3fMap () = Eigen::Vector3f::Random ().normalized();
+    return p;
+  };
 
   size_t N = ui_->spinbox_ppm->value ();
   dataset_->clear ();
+
+  std::cout << "Generating dataset" << std::endl;
 
   if (ui_->checkbox_line->checkState ())
   {
@@ -139,7 +156,13 @@ QtExample::generateDataset ()
     // Create generator
     std::uniform_real_distribution<> p_dist (-size / 2, size / 2);
     Eigen::Vector3f v (std::sin (theta) * std::cos (phi), std::sin (theta) * std::sin (phi), std::cos (theta));
-    auto generate_inlier = [&](){ return v * p_dist (gen); };
+    auto generate_inlier = [&]()
+    {
+      pcl::PointNormal p;
+      p.getVector3fMap () = v * p_dist (gen);
+      p.getNormalVector3fMap () = (v.cross (Eigen::Vector3f::Random ())).normalized();
+      return p;
+    };
     // Generate inliers
     size_t inliers = ui_->spinbox_inlier_fraction->value () * N;
     for (size_t i = 0; i < inliers; ++i)
@@ -148,12 +171,13 @@ QtExample::generateDataset ()
     for (size_t i = 0; i < N - inliers; ++i)
       push_point (generate_outlier ());
     // Update center
-    center.x += size;
+    center[0] += size;
+    std::cout << "* Line: theta (" << theta << "), phi (" << phi << ")" << std::endl;
   }
 
   if (ui_->checkbox_sphere->checkState ())
   {
-    // Generate model parameters
+    // Generate model parameters (radius)
     std::uniform_real_distribution<> m_dist (size / 5, size / 2);
     float r = m_dist (gen);
     // Create generator
@@ -167,7 +191,10 @@ QtExample::generateDataset ()
         y = p_dist (gen);
       }
       float s = 2 * std::sqrt (1 - x * x - y * y) * r;
-      return Eigen::Vector3f (s * x, s * y, (1.0 - 2.0 * (x * x + y * y)) * r);
+      pcl::PointNormal p;
+      p.getVector3fMap () = Eigen::Vector3f (s * x, s * y, (1.0 - 2.0 * (x * x + y * y)) * r);
+      p.getNormalVector3fMap () = p.getVector3fMap ().normalized();
+      return p;
     };
     // Generate inliers
     size_t inliers = ui_->spinbox_inlier_fraction->value () * N;
@@ -177,7 +204,9 @@ QtExample::generateDataset ()
     for (size_t i = 0; i < N - inliers; ++i)
       push_point (generate_outlier ());
     // Update center
-    center.x += size;
+    center[0] += size;
+    std::cout << "* Sphere: radius (" << r << ")" << std::endl;
+  }
   }
 }
 

@@ -40,7 +40,7 @@ class QtExample : public QMainWindow
 
     Ui::QtExample* ui_;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr dataset_;
+    pcl::PointCloud<pcl::PointNormal>::Ptr dataset_;
     std::vector<int> inliers_;
 
 };
