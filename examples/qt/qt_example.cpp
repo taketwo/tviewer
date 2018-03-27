@@ -4,13 +4,12 @@
 
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
+#include <pcl/filters/project_inliers.h>
 #include <pcl/sample_consensus/ransac.h>
 #include <pcl/sample_consensus/sac_model_line.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
 #include <pcl/sample_consensus/sac_model_sphere.h>
 #include <pcl/sample_consensus/sac_model_cylinder.h>
-
-#include <tviewer/tviewer.h>
 
 using namespace tviewer;
 
@@ -18,6 +17,8 @@ QtExample::QtExample (QWidget* parent)
 : QMainWindow (parent)
 , ui_ (new Ui::QtExample)
 , dataset_ (new pcl::PointCloud<pcl::PointNormal>)
+, inliers_ (new std::vector<int>)
+, fitted_primitive_ (new Primitives)
 {
   ui_->setupUi (this);
 
@@ -49,13 +50,20 @@ QtExample::QtExample (QWidget* parent)
   );
 
   ui_->viewer->add
+  ( CreatePrimitiveArrayObject ("model", "m")
+  . description                ("Fitted model primitive shape")
+  . data                       (fitted_primitive_)
+  , false
+  );
+
+  ui_->viewer->add
   ( CreatePointCloudObject<pcl::PointXYZ> ("inliers", "c")
   . description                           ("Model inliers")
   . onUpdate                              ([this]()
     {
       pcl::PointCloud<pcl::PointXYZ>::Ptr inliers;
       inliers.reset (new pcl::PointCloud<pcl::PointXYZ>);
-      pcl::copyPointCloud (*dataset_, inliers_, *inliers);
+      pcl::copyPointCloud (*dataset_, *inliers_, *inliers);
       return inliers;
     })
   . pointSize                             (5)
@@ -75,7 +83,8 @@ void
 QtExample::onDataGenerationSettingsChanged ()
 {
   generateDataset ();
-  inliers_.clear ();
+  inliers_->clear ();
+  fitted_primitive_->clear ();
   ui_->viewer->update ();
 }
 
@@ -110,13 +119,45 @@ QtExample::onButtonFitClicked ()
   ransac.setProbability (ui_->spinbox_probability->value ());
   ransac.setMaxIterations (ui_->spinbox_max_iterations->value ());
   ransac.computeModel (1);
-  ransac.getInliers (inliers_);
+  ransac.getInliers (*inliers_);
   Eigen::VectorXf model_coefficients;
   ransac.getModelCoefficients (model_coefficients);
   std::cout << "Model type: " << model->getClassName() << std::endl;
   std::cout << "Coefficients: " << model_coefficients.transpose () << std::endl;
-  std::cout << "Number of inliers: " << inliers_.size () << std::endl;
+  std::cout << "Number of inliers: " << inliers_->size () << std::endl;
+
+  fitted_primitive_->clear ();
+  if (ui_->radio_sphere->isChecked ())
+  {
+    fitted_primitive_->push_back (Sphere {Eigen::Vector3f (model_coefficients[0], model_coefficients[1], model_coefficients[2]), model_coefficients[3], 0xFFFFFF });
+  }
+  else if (ui_->radio_cylinder->isChecked ())
+  {
+    // Project inliers on the cylinder axis
+    pcl::ProjectInliers<pcl::PointNormal> proj;
+    proj.setModelType (pcl::SACMODEL_LINE);
+    proj.setInputCloud (dataset_);
+    proj.setIndices (inliers_);
+    pcl::ModelCoefficientsPtr line (new pcl::ModelCoefficients);
+    line->values.resize (6);
+    std::memcpy (line->values.data (), model_coefficients.data (), 6 * sizeof (float));
+    proj.setModelCoefficients (line);
+    pcl::PointCloud<pcl::PointNormal> projected;
+    proj.filter (projected);
+    // From the projected points compute cylinder dimensions
+    pcl::PointNormal min, max;
+    pcl::getMinMax3D (projected, min, max);
+    Eigen::Vector3f diff = max.getVector3fMap () - min.getVector3fMap ();
+    Eigen::Vector3f center = min.getVector3fMap () + diff / 2;
+    Eigen::Vector3f axis = Eigen::Vector3f (model_coefficients[3], model_coefficients[4], model_coefficients[5]).normalized();
+    float height = diff.norm ();
+    fitted_primitive_->push_back (Cylinder {center, axis * height, model_coefficients[6] });
+  }
+
+  ui_->viewer->update ("model");
   ui_->viewer->update ("inliers");
+  ui_->viewer->update ("dataset");
+  ui_->viewer->show ("model");
   ui_->viewer->show ("inliers");
 }
 

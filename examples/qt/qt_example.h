@@ -6,6 +6,8 @@
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 
+#include <tviewer/tviewer.h>
+
 namespace Ui
 {
   class QtExample;
@@ -41,7 +43,8 @@ class QtExample : public QMainWindow
     Ui::QtExample* ui_;
 
     pcl::PointCloud<pcl::PointNormal>::Ptr dataset_;
-    std::vector<int> inliers_;
+    pcl::IndicesPtr inliers_;
+    tviewer::PrimitivesPtr fitted_primitive_;
 
 };
 
