@@ -77,6 +77,19 @@ namespace
         v_.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, shading_, id);
     }
 
+    void operator() (tviewer::Cylinder cylinder)
+    {
+      pcl::ModelCoefficients coefficients;
+      coefficients.values.resize (7);
+      cylinder.center -= (cylinder.axis / 2);
+      std::memcpy (&coefficients.values[0], cylinder.center.data (), 3 * sizeof (float));
+      std::memcpy (&coefficients.values[3], cylinder.axis.data (), 3 * sizeof (float));
+      coefficients.values[6] = cylinder.radius;
+      const auto& id = makeId ("cylinder");
+      v_.addCylinder (coefficients, id);
+      v_.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, shading_, id);
+    }
+
   };
 
 }

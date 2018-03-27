@@ -51,8 +51,17 @@ namespace tviewer
     Color color;             ///< Color of the sphere.
   };
 
+  /** Structure that represents a cylinder. */
+  struct Cylinder
+  {
+    Eigen::Vector3f center;  ///< Center of the cylinder.
+    Eigen::Vector3f axis;    ///< Axis of the cylinder. The norm of the axis
+                             ///< defines the height of the cylinder.
+    float radius;            ///< Radius of the cylinder.
+  };
+
   /// A primitive shape.
-  using Primitive = boost::variant<Arrow, Sphere>;
+  using Primitive = boost::variant<Arrow, Sphere, Cylinder>;
 
   /// Array of primitive shapes.
   using Primitives = std::vector<Primitive>;
