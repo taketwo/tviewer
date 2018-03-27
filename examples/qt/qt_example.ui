@@ -55,6 +55,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkbox_cylinder">
+         <property name="text">
+          <string>Cylinder</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Points per model:</string>
@@ -138,6 +148,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QRadioButton" name="radio_cylinder">
+         <property name="text">
+          <string>Cylinder</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_distance_threshold">
          <property name="toolTip">
           <string>Distance to model threshold</string>
@@ -150,7 +167,7 @@
        <item>
         <widget class="QDoubleSpinBox" name="spinbox_distance_threshold">
          <property name="minimum">
-          <double>0.010000000000000</double>
+          <double>0.100000000000000</double>
          </property>
          <property name="maximum">
           <double>10.000000000000000</double>
@@ -339,6 +356,22 @@
     <hint type="sourcelabel">
      <x>76</x>
      <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkbox_cylinder</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>QtExample</receiver>
+   <slot>onDataGenerationSettingsChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
      <x>146</x>

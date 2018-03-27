@@ -8,6 +8,7 @@
 #include <pcl/sample_consensus/sac_model_line.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
 #include <pcl/sample_consensus/sac_model_sphere.h>
+#include <pcl/sample_consensus/sac_model_cylinder.h>
 
 #include <tviewer/tviewer.h>
 
@@ -95,6 +96,13 @@ QtExample::onButtonFitClicked ()
   {
     model.reset (new pcl::SampleConsensusModelSphere<pcl::PointNormal> (dataset_, true));
     model->setRadiusLimits(1, 1000);
+  }
+  else if (ui_->radio_cylinder->isChecked ())
+  {
+    auto m = new pcl::SampleConsensusModelCylinder<pcl::PointNormal, pcl::PointNormal> (dataset_, true);
+    m->setInputNormals (dataset_);
+    model.reset (m);
+    model->setRadiusLimits (1, 1000);
   }
 
   pcl::RandomSampleConsensus<pcl::PointNormal> ransac (model);
@@ -207,6 +215,36 @@ QtExample::generateDataset ()
     center[0] += size;
     std::cout << "* Sphere: radius (" << r << ")" << std::endl;
   }
+
+  if (ui_->checkbox_cylinder->checkState ())
+  {
+    // Generate model parameters (radius, height)
+    std::uniform_real_distribution<> m_dist (size / 5, size / 2);
+    float radius = m_dist (gen);
+    float height = m_dist (gen);
+    // Create generator
+    std::uniform_real_distribution<> p_dist (-1.0, 1.0);
+    auto generate_inlier = [&]()
+    {
+      auto a = p_dist (gen) * M_PI;
+      auto x = std::sin (a) * radius;
+      auto y = std::cos (a) * radius;
+      auto z = p_dist (gen) * height / 2;
+      pcl::PointNormal p;
+      p.getVector3fMap () = Eigen::Vector3f (x, y, z);
+      p.getNormalVector3fMap () = Eigen::Vector3f (x, y, 0).normalized();
+      return p;
+    };
+    // Generate inliers
+    size_t inliers = ui_->spinbox_inlier_fraction->value () * N;
+    for (size_t i = 0; i < inliers; ++i)
+      push_point (generate_inlier ());
+    // Generate outliers
+    for (size_t i = 0; i < N - inliers; ++i)
+      push_point (generate_outlier ());
+    // Update center
+    center[0] += size;
+    std::cout << "* Cylinder: radius (" << radius << "), height (" << height << ")" << std::endl;
   }
 }
 
