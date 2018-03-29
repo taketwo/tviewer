@@ -153,7 +153,7 @@ namespace tviewer
         *   else if (key == "I")
         *     value++;
         *   std::cout << "Current value: " << value << std::endl;
-        *   viewer->updateAll ();
+        *   viewer->update ();
         * }
         * \endcode */
 
