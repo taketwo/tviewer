@@ -60,8 +60,16 @@ namespace tviewer
     float radius;            ///< Radius of the cylinder.
   };
 
+  /** Structure that represents a box. */
+  struct Box
+  {
+    Eigen::Vector3f center;          ///< Center of the box.
+    Eigen::Quaternionf orientation;  ///< Orientation of the box.
+    Eigen::Vector3f dimensions;      ///< Dimensions (width, height, depth) of the box.
+  };
+
   /// A primitive shape.
-  using Primitive = boost::variant<Arrow, Sphere, Cylinder>;
+  using Primitive = boost::variant<Arrow, Sphere, Cylinder, Box>;
 
   /// Array of primitive shapes.
   using Primitives = std::vector<Primitive>;

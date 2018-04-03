@@ -90,6 +90,13 @@ namespace
       v_.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, shading_, id);
     }
 
+    void operator() (tviewer::Box box)
+    {
+      const auto& id = makeId ("box");
+      v_.addCube (box.center, box.orientation, box.dimensions[0], box.dimensions[1], box.dimensions[2], id);
+      v_.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_SHADING, shading_, id);
+    }
+
   };
 
 }
