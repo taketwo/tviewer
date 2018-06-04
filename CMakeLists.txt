@@ -89,7 +89,6 @@ add_library(${LIB_NAME}
   tviewer/keyboard_listeners/binary_state_switch.cpp
   tviewer/visualization_objects/normal_cloud_object.cpp
   tviewer/visualization_objects/point_cloud_object.cpp
-  tviewer/visualization_objects/point_cloud_with_color_shuffling_object.cpp
   tviewer/visualization_objects/poly_data_object.cpp
   tviewer/visualization_objects/primitive_array_object.cpp
   tviewer/visualization_objects/visualization_object.cpp
