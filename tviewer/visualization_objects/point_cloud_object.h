@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Sergey Alexandrov
+ * Copyright (c) 2014, 2018 Sergey Alexandrov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -25,6 +25,8 @@
 /** \file point_cloud_object.h
   * Visualization object for points */
 
+#include <boost/variant.hpp>
+
 #include "../color.h"
 #include "visualization_object.h"
 
@@ -35,17 +37,19 @@ namespace tviewer
   /// @{
 
   /** Visualization object that displays a cloud of points. */
-  template <typename PointT>
   class PointCloudObject : public VisualizationObject
   {
 
     public:
 
-      /// Cloud of points.
-      using PointCloud = pcl::PointCloud<PointT>;
-
       /// Shared pointer to a cloud of points.
-      using PointCloudPtr = typename PointCloud::Ptr;
+      using PointCloudPtr = boost::variant<pcl::PointCloud<pcl::PointXYZ>::Ptr,
+                                           pcl::PointCloud<pcl::PointXYZI>::Ptr,
+                                           pcl::PointCloud<pcl::PointXYZL>::Ptr,
+                                           pcl::PointCloud<pcl::PointNormal>::Ptr,
+                                           pcl::PointCloud<pcl::PointXYZRGB>::Ptr,
+                                           pcl::PointCloud<pcl::PointXYZRGBA>::Ptr,
+                                           pcl::PointCloud<pcl::PointXYZRGBL>::Ptr>;
 
       /// Function that retrieves data for visualization.
       using RetrieveFunction = std::function<PointCloudPtr ()>;
@@ -86,18 +90,15 @@ namespace tviewer
       , retrieve_ (retrieve)
       , point_size_ (point_size)
       , visibility_ (visibility)
-      , use_fixed_color_ (use_fixed_color)
-      , color_ (color)
       {
+        if (use_fixed_color)
+          fixed_color_ = color;
       }
 
       bool
       at (size_t index, float& x, float& y, float& z) const override;
 
     protected:
-
-      bool
-      at_ (size_t index, boost::any& item) const override;
 
       void
       addDataToVisualizer (pcl::visualization::PCLVisualizer& v) override;
@@ -121,14 +122,12 @@ namespace tviewer
 
       int point_size_;
       float visibility_;
-      bool use_fixed_color_;
-      Color color_;
+      boost::optional<Color> fixed_color_;
 
   };
 
   /** Helper class that provides a fluent interface to simplify instantiation of
     * PointCloudObject. */
-  template <typename T>
   class CreatePointCloudObject
   {
 
@@ -137,15 +136,14 @@ namespace tviewer
       std::string name_;
       std::string key_;
 
-      using Data = typename PointCloudObject<T>::PointCloud;
-      using DataPtr = typename PointCloudObject<T>::PointCloudPtr;
+      using DataPtr = typename PointCloudObject::PointCloudPtr;
 
 #include "../named_parameters/named_parameters_def.h"
-#define OWNER_TYPE CreatePointCloudObject<T>
+#define OWNER_TYPE CreatePointCloudObject
 
       NAMED_PARAMETER (std::string, description);
-      NAMED_PARAMETER (DataPtr, data, DataPtr (new Data));
-      NAMED_PARAMETER (typename PointCloudObject<T>::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (DataPtr, data);
+      NAMED_PARAMETER (typename PointCloudObject::RetrieveFunction, onUpdate);
       NAMED_PARAMETER (int, pointSize, 1);
       NAMED_PARAMETER (float, visibility, 1.0);
       NAMED_PARAMETER (Color, color);
@@ -166,7 +164,7 @@ namespace tviewer
         * This function performs instantiation of an PointCloudObject. It is
         * supposed to be called after configuring the object using the fluent
         * interface functions. */
-      operator std::shared_ptr<PointCloudObject<T>> ();
+      operator std::shared_ptr<PointCloudObject> ();
 
       /** Cast operator to VisualizationObject::Ptr.
         *
@@ -175,7 +173,7 @@ namespace tviewer
         * interface functions. */
       inline operator std::shared_ptr<VisualizationObject> ()
       {
-        return this->operator std::shared_ptr<PointCloudObject<T>> ();
+        return this->operator std::shared_ptr<PointCloudObject> ();
       }
 
   };

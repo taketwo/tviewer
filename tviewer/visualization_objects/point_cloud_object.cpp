@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Sergey Alexandrov
+ * Copyright (c) 2014, 2018 Sergey Alexandrov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -22,94 +22,147 @@
 
 #include "point_cloud_object.h"
 
-template <typename PointT> bool
-tviewer::PointCloudObject<PointT>::at (size_t index, float& x, float& y, float& z) const
+namespace
 {
-  if (data_ && index < data_->size ())
+
+  struct AtVisitor : public boost::static_visitor<bool>
   {
-    const auto& p = data_->at (index);
-    x = p.x;
-    y = p.y;
-    z = p.z;
-    return true;
-  }
-  return false;
+
+    size_t index_;
+    float& x_;
+    float& y_;
+    float& z_;
+
+    AtVisitor (size_t index, float& x, float& y, float& z)
+    : index_ (index)
+    , x_ (x)
+    , y_ (y)
+    , z_ (z)
+    {
+    }
+
+    template <typename T> bool
+    operator() (const T& cloud)
+    {
+      if (index_ < cloud->size ())
+      {
+        const auto& item = cloud->at (index_);
+        x_ = item.x;
+        y_ = item.y;
+        z_ = item.z;
+        return true;
+      }
+      return false;
+    }
+
+  };
+
+  struct AddVisitor : public boost::static_visitor<>
+  {
+
+    pcl::visualization::PCLVisualizer& v_;
+    const std::string& name_;
+    int point_size_;
+    float visibility_;
+    boost::optional<tviewer::Color> fixed_color_;
+
+    AddVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name, int point_size, float visibility, boost::optional<tviewer::Color> fixed_color)
+    : v_ (v)
+    , name_ (name)
+    , point_size_ (point_size)
+    , visibility_ (visibility)
+    , fixed_color_ (fixed_color)
+    {
+    }
+
+    template <typename T> void
+    operator() (const T& cloud)
+    {
+      using PointType = typename T::element_type::PointType;
+      v_.addPointCloud<PointType> (cloud, name_);
+      v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
+      v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, visibility_, name_);
+      if (fixed_color_)
+      {
+        float r, g, b;
+        std::tie (r, g, b) = tviewer::getRGBFromColor (*fixed_color_);
+        v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_COLOR, r, g, b, name_);
+      }
+    }
+
+  };
+
+  struct UpdateVisitor : public boost::static_visitor<>
+  {
+
+    pcl::visualization::PCLVisualizer& v_;
+    const std::string& name_;
+
+    UpdateVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name)
+    : v_ (v)
+    , name_ (name)
+    {
+    }
+
+    template <typename T> void
+    operator() (const T& cloud)
+    {
+      using PointType = typename T::element_type::PointType;
+      v_.updatePointCloud<PointType> (cloud, name_);
+    }
+
+  };
 }
 
-template <typename PointT> bool
-tviewer::PointCloudObject<PointT>::at_ (size_t index, boost::any& item) const
+bool
+tviewer::PointCloudObject::at (size_t index, float& x, float& y, float& z) const
 {
-  if (data_ && index < data_->size ())
-  {
-    item = data_->at (index);
-    return true;
-  }
-  return false;
+  AtVisitor at (index, x, y, z);
+  return boost::apply_visitor(at, data_);
 }
 
-template <typename PointT> void
-tviewer::PointCloudObject<PointT>::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
+void
+tviewer::PointCloudObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  v.addPointCloud<PointT> (data_, name_);
-  v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
-  v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, visibility_, name_);
-  if (use_fixed_color_ != 0)
-  {
-    float r, g, b;
-    std::tie (r, g, b) = getRGBFromColor (color_);
-    v.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_COLOR, r, g, b, name_);
-  }
+  AddVisitor add (v, name_, point_size_, visibility_, fixed_color_);
+  boost::apply_visitor (add, data_);
 }
 
-template <typename PointT> void
-tviewer::PointCloudObject<PointT>::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
+void
+tviewer::PointCloudObject::removeDataFromVisualizer (pcl::visualization::PCLVisualizer& v)
 {
   v.removePointCloud (name_);
 }
 
-template <typename PointT> void
-tviewer::PointCloudObject<PointT>::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
+void
+tviewer::PointCloudObject::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  v.updatePointCloud<PointT> (data_, name_);
+  UpdateVisitor update (v, name_);
+  boost::apply_visitor (update, data_);
 }
 
-template <typename PointT> void
-tviewer::PointCloudObject<PointT>::updateData ()
+void
+tviewer::PointCloudObject::updateData ()
 {
   data_ = retrieve_ ();
 }
 
-template <typename T>
-tviewer::CreatePointCloudObject<T>::operator std::shared_ptr<PointCloudObject<T>> ()
+tviewer::CreatePointCloudObject::operator std::shared_ptr<PointCloudObject> ()
 {
   // Need to turn data_ into a local variable, otherwise the lambda does not
   // seem to capture it by value properly.
-  auto d = *data_;
+  auto d = data_ ? *data_ : pcl::PointCloud<pcl::PointXYZ>::Ptr (new pcl::PointCloud<pcl::PointXYZ>);
   auto l = [=] { return d; };
 
-  return std::make_shared<PointCloudObject<T>> (name_,
-                                                description_ ? *description_ : name_,
-                                                key_,
-                                                *data_,
-                                                onUpdate_ ? *onUpdate_ : l,
-                                                *pointSize_,
-                                                *visibility_,
-                                                color_ ? true : false,
-                                                color_ ? *color_ : 0
-                                                );
+  return std::make_shared<PointCloudObject> (name_,
+                                             description_ ? *description_ : name_,
+                                             key_,
+                                             *data_,
+                                             onUpdate_ ? *onUpdate_ : l,
+                                             *pointSize_,
+                                             *visibility_,
+                                             color_ ? true : false,
+                                             color_ ? *color_ : 0
+                                            );
 }
-
-template class tviewer::PointCloudObject<pcl::PointXYZ>;
-template class tviewer::PointCloudObject<pcl::PointXYZL>;
-template class tviewer::PointCloudObject<pcl::PointNormal>;
-template class tviewer::PointCloudObject<pcl::PointXYZRGB>;
-template class tviewer::PointCloudObject<pcl::PointXYZRGBA>;
-template class tviewer::PointCloudObject<pcl::PointXYZRGBL>;
-
-template class tviewer::CreatePointCloudObject<pcl::PointXYZ>;
-template class tviewer::CreatePointCloudObject<pcl::PointXYZL>;
-template class tviewer::CreatePointCloudObject<pcl::PointNormal>;
-template class tviewer::CreatePointCloudObject<pcl::PointXYZRGB>;
-template class tviewer::CreatePointCloudObject<pcl::PointXYZRGBA>;
-template class tviewer::CreatePointCloudObject<pcl::PointXYZRGBL>;
 

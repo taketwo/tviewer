@@ -61,10 +61,10 @@ int main (int argc, char** argv)
   generatePointCube (*cube, 5, 0.1f, false);
 
   viewer->add
-  ( CreatePointCloudObject<pcl::PointXYZRGBA> ("cube", "p")
-  . description ("Point cube")
-  . data (cube)
-  . pointSize (5)
+  ( CreatePointCloudObject ("cube", "p")
+  . description            ("Point cube")
+  . data                   (cube)
+  . pointSize              (5)
   );
 
   BinaryStateSwitch::Ptr random_colors

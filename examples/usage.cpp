@@ -52,12 +52,12 @@ int main (int argc, char** argv)
   generateRandomPlanarCloud (*cloud);
 
   viewer->add
-  ( CreatePointCloudObject<pcl::PointXYZ> ("cloud", "c")
-  . description                           ("Random point cloud")
-  . data                                  (cloud)
-  . pointSize                             (4)
-  . visibility                            (0.9)
-  . color                                 (generateRandomColor ())
+  ( CreatePointCloudObject ("cloud", "c")
+  . description            ("Random point cloud")
+  . data                   (cloud)
+  . pointSize              (4)
+  . visibility             (0.9)
+  . color                  (generateRandomColor ())
   );
 
   viewer->add

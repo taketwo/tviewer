@@ -402,11 +402,11 @@ tviewer::TViewerImpl::waitPointsSelected (pcl::PointCloud<pcl::PointXYZL>& cloud
   const std::string id = "picked points";
 
   add
-  ( CreatePointCloudObject<pcl::PointXYZRGBA> (id, "u")
-  . description                               ("User selected points")
-  . data                                      (all_points)
-  . pointSize                                 (8)
-  . visibility                                (0.9)
+  ( CreatePointCloudObject (id, "u")
+  . description            ("User selected points")
+  . data                   (all_points)
+  . pointSize              (8)
+  . visibility             (0.9)
   );
 
   show (id);

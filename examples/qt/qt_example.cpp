@@ -30,12 +30,12 @@ QtExample::QtExample (QWidget* parent)
   generateDataset ();
 
   ui_->viewer->add
-  ( CreatePointCloudObject<pcl::PointNormal> ("dataset", "d")
-  . description                              ("Generated dataset")
-  . data                                     (dataset_)
-  . pointSize                                (2)
-  . visibility                               (1.0)
-  . color                                    (generateRandomColor ())
+  ( CreatePointCloudObject ("dataset", "d")
+  . description            ("Generated dataset")
+  . data                   (dataset_)
+  . pointSize              (2)
+  . visibility             (1.0)
+  . color                  (generateRandomColor ())
   , true
   );
 
@@ -57,18 +57,18 @@ QtExample::QtExample (QWidget* parent)
   );
 
   ui_->viewer->add
-  ( CreatePointCloudObject<pcl::PointXYZ> ("inliers", "c")
-  . description                           ("Model inliers")
-  . onUpdate                              ([this]()
+  ( CreatePointCloudObject ("inliers", "c")
+  . description            ("Model inliers")
+  . onUpdate               ([this]()
     {
       pcl::PointCloud<pcl::PointXYZ>::Ptr inliers;
       inliers.reset (new pcl::PointCloud<pcl::PointXYZ>);
       pcl::copyPointCloud (*dataset_, *inliers_, *inliers);
       return inliers;
     })
-  . pointSize                             (5)
-  . visibility                            (1.0)
-  . color                                 (generateRandomColor ())
+  . pointSize              (5)
+  . visibility             (1.0)
+  . color                  (generateRandomColor ())
   );
 
   ui_->menu_bar->addMenu (ui_->viewer->getMenu ("View"));
