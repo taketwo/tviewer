@@ -114,8 +114,7 @@ target_compile_definitions(${LIB_NAME} PUBLIC ${TVIEWER_DEFINITIONS})
 
 # Documentation
 if(BUILD_DOC)
-  set(DOXYFILE_LATEX false)
-  include(UseDoxygen)
+  add_subdirectory(doc)
 endif()
 
 # Examples
