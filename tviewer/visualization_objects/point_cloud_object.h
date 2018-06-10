@@ -27,7 +27,6 @@
 
 #include <boost/variant.hpp>
 
-#include "../color.h"
 #include "visualization_object.h"
 
 namespace tviewer
@@ -53,6 +52,9 @@ namespace tviewer
 
       /// Function that retrieves data for visualization.
       using RetrieveFunction = std::function<PointCloudPtr ()>;
+
+      /// Point cloud coloring method.
+      using Color = boost::variant<pcl::RGB, std::string>;
 
       /** Construct point cloud visualization object.
         *
@@ -83,16 +85,14 @@ namespace tviewer
                         const RetrieveFunction& retrieve,
                         int point_size,
                         float visibility,
-                        bool use_fixed_color,
                         Color color)
       : VisualizationObject (name, description, key)
       , data_ (cloud)
       , retrieve_ (retrieve)
       , point_size_ (point_size)
       , visibility_ (visibility)
+      , color_ (color)
       {
-        if (use_fixed_color)
-          fixed_color_ = color;
       }
 
       bool
@@ -122,7 +122,7 @@ namespace tviewer
 
       int point_size_;
       float visibility_;
-      boost::optional<Color> fixed_color_;
+      Color color_;
 
   };
 
@@ -143,10 +143,10 @@ namespace tviewer
 
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (DataPtr, data);
-      NAMED_PARAMETER (typename PointCloudObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (PointCloudObject::RetrieveFunction, onUpdate);
       NAMED_PARAMETER (int, pointSize, 1);
       NAMED_PARAMETER (float, visibility, 1.0);
-      NAMED_PARAMETER (Color, color);
+      NAMED_PARAMETER (PointCloudObject::Color, color, "");
 
 #include "../named_parameters/named_parameters_undef.h"
 

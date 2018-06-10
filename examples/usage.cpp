@@ -57,7 +57,7 @@ int main (int argc, char** argv)
   . data                   (cloud)
   . pointSize              (4)
   . visibility             (0.9)
-  . color                  (generateRandomColor ())
+  . color                  (pcl::getRandomColor ())
   );
 
   viewer->add

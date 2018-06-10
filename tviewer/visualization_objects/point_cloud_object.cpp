@@ -22,8 +22,65 @@
 
 #include "point_cloud_object.h"
 
+using Color = tviewer::PointCloudObject::Color;
+
 namespace
 {
+
+#define MAKE_HANDLER_CREATOR(Name, Trait) \
+  template <typename PointT> typename std::enable_if<!pcl::traits::Trait<PointT>::value, pcl::visualization::PointCloudColorHandler<PointT>*>::type \
+  create ## Name ## Handler () { return nullptr; } \
+  template <typename PointT> typename std::enable_if<pcl::traits::Trait<PointT>::value, pcl::visualization::PointCloudColorHandler<PointT>*>::type \
+  create ## Name ## Handler () { return new pcl::visualization::PointCloudColorHandler ## Name ## Field<PointT>; }
+
+  MAKE_HANDLER_CREATOR(Label, has_label)
+  MAKE_HANDLER_CREATOR(  RGB, has_color)
+  MAKE_HANDLER_CREATOR( RGBA, has_color)
+
+  template <typename PointT>
+  struct CreateColorHandlerVisitor : public boost::static_visitor<pcl::visualization::PointCloudColorHandler<PointT>*>
+  {
+
+    pcl::visualization::PointCloudColorHandler<PointT>*
+    operator() (const std::string& field) const
+    {
+      bool field_auto = field == "";
+      if ((field_auto || field == "rgb") && pcl::traits::has_color<PointT>::value)
+        return createRGBHandler<PointT> ();
+      if ((field_auto || field == "rgba") && pcl::traits::has_color<PointT>::value)
+        return createRGBAHandler<PointT> ();
+      if ((field_auto || field == "label") && pcl::traits::has_label<PointT>::value)
+        return createLabelHandler<PointT> ();
+      if ((field_auto || field == "intensity") && pcl::traits::has_intensity<PointT>::value)
+        return new pcl::visualization::PointCloudColorHandlerGenericField<PointT> ("intensity");
+      if ((field_auto || field == "curvature") && pcl::traits::has_curvature<PointT>::value)
+        return new pcl::visualization::PointCloudColorHandlerGenericField<PointT> ("curvature");
+      return new pcl::visualization::PointCloudColorHandlerGenericField<PointT> (field);
+    }
+
+    pcl::visualization::PointCloudColorHandler<PointT>*
+    operator() (const pcl::RGB& rgb) const
+    {
+      return new pcl::visualization::PointCloudColorHandlerCustom<PointT> (rgb.r, rgb.g, rgb.b);
+    }
+
+  };
+
+  template <typename PointT> typename pcl::visualization::PointCloudColorHandler<PointT>::Ptr
+  createHandler (const typename pcl::PointCloud<PointT>::Ptr& cloud, const std::string& name, const Color& color)
+  {
+    typename pcl::visualization::PointCloudColorHandler<PointT>::Ptr handler (boost::apply_visitor (CreateColorHandlerVisitor<PointT> (), color));
+    handler->setInputCloud (cloud);
+    if (!handler->isCapable ())
+    {
+      auto field = boost::get<std::string> (color);
+      if (field != "")
+        pcl::console::print_error ("Unable to colorize point cloud \"%s\" using \"%s\" field, falling back to uniform white color\n", name.c_str (), field.c_str ());
+      handler.reset (new pcl::visualization::PointCloudColorHandlerCustom<PointT> (255, 255, 255));
+      handler->setInputCloud (cloud);
+    }
+    return handler;
+  }
 
   struct AtVisitor : public boost::static_visitor<bool>
   {
@@ -64,14 +121,14 @@ namespace
     const std::string& name_;
     int point_size_;
     float visibility_;
-    boost::optional<tviewer::Color> fixed_color_;
+    Color color_;
 
-    AddVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name, int point_size, float visibility, boost::optional<tviewer::Color> fixed_color)
+    AddVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name, int point_size, float visibility, const Color& color)
     : v_ (v)
     , name_ (name)
     , point_size_ (point_size)
     , visibility_ (visibility)
-    , fixed_color_ (fixed_color)
+    , color_ (color)
     {
     }
 
@@ -79,15 +136,9 @@ namespace
     operator() (const T& cloud)
     {
       using PointType = typename T::element_type::PointType;
-      v_.addPointCloud<PointType> (cloud, name_);
+      v_.addPointCloud<PointType> (cloud, *createHandler<PointType> (cloud, name_, color_), name_);
       v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, point_size_, name_);
       v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_OPACITY, visibility_, name_);
-      if (fixed_color_)
-      {
-        float r, g, b;
-        std::tie (r, g, b) = tviewer::getRGBFromColor (*fixed_color_);
-        v_.setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_COLOR, r, g, b, name_);
-      }
     }
 
   };
@@ -97,10 +148,12 @@ namespace
 
     pcl::visualization::PCLVisualizer& v_;
     const std::string& name_;
+    Color color_;
 
-    UpdateVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name)
+    UpdateVisitor (pcl::visualization::PCLVisualizer& v, const std::string& name, const Color& color)
     : v_ (v)
     , name_ (name)
+    , color_ (color)
     {
     }
 
@@ -108,7 +161,7 @@ namespace
     operator() (const T& cloud)
     {
       using PointType = typename T::element_type::PointType;
-      v_.updatePointCloud<PointType> (cloud, name_);
+      v_.updatePointCloud<PointType> (cloud, *createHandler<PointType> (cloud, name_, color_), name_);
     }
 
   };
@@ -124,7 +177,7 @@ tviewer::PointCloudObject::at (size_t index, float& x, float& y, float& z) const
 void
 tviewer::PointCloudObject::addDataToVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  AddVisitor add (v, name_, point_size_, visibility_, fixed_color_);
+  AddVisitor add (v, name_, point_size_, visibility_, color_);
   boost::apply_visitor (add, data_);
 }
 
@@ -137,7 +190,7 @@ tviewer::PointCloudObject::removeDataFromVisualizer (pcl::visualization::PCLVisu
 void
 tviewer::PointCloudObject::refreshDataInVisualizer (pcl::visualization::PCLVisualizer& v)
 {
-  UpdateVisitor update (v, name_);
+  UpdateVisitor update (v, name_, color_);
   boost::apply_visitor (update, data_);
 }
 
@@ -161,8 +214,7 @@ tviewer::CreatePointCloudObject::operator std::shared_ptr<PointCloudObject> ()
                                              onUpdate_ ? *onUpdate_ : l,
                                              *pointSize_,
                                              *visibility_,
-                                             color_ ? true : false,
-                                             color_ ? *color_ : 0
+                                             *color_
                                             );
 }
 
