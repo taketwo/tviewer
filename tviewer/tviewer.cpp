@@ -34,6 +34,7 @@
 
 #include "tviewer.h"
 #include "utils.h"
+#include "color.h"
 
 tviewer::TViewerImpl::TViewerImpl (bool create_interactor)
 : viewer_ (new pcl::visualization::PCLVisualizer ("T Viewer", create_interactor))

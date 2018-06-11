@@ -27,7 +27,6 @@
 
 #include <boost/variant.hpp>
 
-#include "../color.h"
 #include "visualization_object.h"
 
 namespace tviewer
@@ -54,6 +53,9 @@ namespace tviewer
       /// Function that retrieves data for visualization.
       using RetrieveFunction = std::function<PointCloudPtr ()>;
 
+      /// Point cloud coloring method, either a fixed RGB color or using field data.
+      using Color = boost::variant<pcl::RGB, std::string>;
+
       /** Construct point cloud visualization object.
         *
         * The last parameter controls the color used to display the points.
@@ -72,10 +74,7 @@ namespace tviewer
         * \param[in] point_size size of points
         * \param[in] visibility opacity of points (0.0 is transparent, 1.0 is
         *            opaque)
-        * \param[in] use_fixed_color if set to \c true will ignore the color
-        *            data stored in points (if any) and display them using a
-        *            fixed color (as given by \c color parameter)
-        * \param[in] color color of points */
+        * \param[in] color color of points (either fixed RGB or field name) */
       PointCloudObject (const std::string& name,
                         const std::string& description,
                         const std::string& key,
@@ -83,16 +82,14 @@ namespace tviewer
                         const RetrieveFunction& retrieve,
                         int point_size,
                         float visibility,
-                        bool use_fixed_color,
                         Color color)
       : VisualizationObject (name, description, key)
       , data_ (cloud)
       , retrieve_ (retrieve)
       , point_size_ (point_size)
       , visibility_ (visibility)
+      , color_ (color)
       {
-        if (use_fixed_color)
-          fixed_color_ = color;
       }
 
       bool
@@ -122,7 +119,7 @@ namespace tviewer
 
       int point_size_;
       float visibility_;
-      boost::optional<Color> fixed_color_;
+      Color color_;
 
   };
 
@@ -143,10 +140,10 @@ namespace tviewer
 
       NAMED_PARAMETER (std::string, description);
       NAMED_PARAMETER (DataPtr, data);
-      NAMED_PARAMETER (typename PointCloudObject::RetrieveFunction, onUpdate);
+      NAMED_PARAMETER (PointCloudObject::RetrieveFunction, onUpdate);
       NAMED_PARAMETER (int, pointSize, 1);
       NAMED_PARAMETER (float, visibility, 1.0);
-      NAMED_PARAMETER (Color, color);
+      NAMED_PARAMETER (PointCloudObject::Color, color, "");
 
 #include "../named_parameters/named_parameters_undef.h"
 

@@ -35,7 +35,7 @@ QtExample::QtExample (QWidget* parent)
   . data                   (dataset_)
   . pointSize              (2)
   . visibility             (1.0)
-  . color                  (generateRandomColor ())
+  . color                  (pcl::getRandomColor ())
   , true
   );
 
@@ -68,7 +68,7 @@ QtExample::QtExample (QWidget* parent)
     })
   . pointSize              (5)
   . visibility             (1.0)
-  . color                  (generateRandomColor ())
+  . color                  (pcl::getRandomColor ())
   );
 
   ui_->menu_bar->addMenu (ui_->viewer->getMenu ("View"));

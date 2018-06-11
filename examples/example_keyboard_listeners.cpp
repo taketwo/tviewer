@@ -46,7 +46,7 @@ generatePointCube (pcl::PointCloud<PointT>& cloud, int n, float step, bool rando
         point.x = i * step;
         point.y = j * step;
         point.z = k * step;
-        point.rgba = random_colors ? generateRandomColor () : 0xFFFFF000;
+        point.rgba = random_colors ? pcl::getRandomColor ().rgba : 0xFFFFF000;
         cloud.push_back (point);
       }
     }
